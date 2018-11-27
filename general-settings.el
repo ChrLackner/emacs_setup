@@ -60,7 +60,7 @@
 (defadvice pop-to-buffer (before cancel-other-window first)
   (ad-set-arg 1 nil))
 
-(ad-activate 'pop-to-buffer)
+;;(ad-activate 'pop-to-buffer)
 
 ;; Toggle window dedication
 (defun toggle-window-dedicated ()
@@ -95,5 +95,14 @@
 ;; (global-set-key (kbd "S-C-<down>") 'shrink-window)
 ;; (global-set-key (kbd "S-C-<up>") 'enlarge-window)
 
+;; remove ^M line endings
+(defun remove-dos-eol ()
+  "Do not show ^M in files containing mixed UNIX and DOS line endings"
+  (interactive)
+  (setq buffer-display-table (make-display-table))
+  (aset buffer-display-table ?\^M []))
+
+;; set highlight color
+(set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
 
 (provide 'general-settings)

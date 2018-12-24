@@ -15,5 +15,11 @@
 
 (define-key c-mode-base-map (kbd "C-{") 'add_block_brackets)
 
+(defun build (prog)
+  (interactive
+   (list (completing-read "Source: " (directory-files "~/gitlab/source"))))
+  (if (file-exists-p (format "~/gitlab/source/%s/setup.py" prog))
+      (async-shell-command (format "python3 -m pip install --user ~/gitlab/source/%s" prog))
+    (compile (format "make -j -C ~/gitlab/build/%s" prog))))
 
 (provide 'cpp-settings)

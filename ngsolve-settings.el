@@ -22,10 +22,10 @@
 
 (defun run-ngsolve ()
   (interactive)
-  (start-file-process-shell-command "ngsolve" nil
-                                    (format "python3 -m ngsgui -noEditor %s"
+  (start-file-process-shell-command "ngsolve" "*ngsolve*"
+                                    (format "python3 -m ngsgui %s"
                                             (shell-quote-argument (buffer-file-name))))
-    (start-process "python_move" "python_move" "python3" "/home/clackner/code/utils/move_ngsolve.py")
+  (switch-to-buffer-other-window "*ngsolve*")
   )
 
 (defun my-run-python ()

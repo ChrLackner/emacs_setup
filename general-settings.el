@@ -14,7 +14,7 @@
 (defun set-exec-env-vars()
   (dolist (var (list "PATH" "PYTHONPATH" "MKLROOT" "MKL_THREADING_LAYER"))
     (setenv var (concat "/usr/local/bin:" (getenv var)))
-    (let ((path-from-shell (shell-command-to-string "$SHELL -i -c 'echo -n $PATH'")))
+    (let ((path-from-shell (shell-command-to-string "$SHELL -c 'echo -n $PATH'")))
       (setenv var path-from-shell)
       (setq exec-path (split-string path-from-shell path-separator)))))
 

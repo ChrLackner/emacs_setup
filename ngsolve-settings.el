@@ -23,9 +23,23 @@
 (defun run-ngsolve ()
   (interactive)
   (start-file-process-shell-command "ngsolve" "*ngsolve*"
-                                    (format "python3 -m ngsgui %s"
+                                    (format "python3 -m ngsgui -no -dc %s"
                                             (shell-quote-argument (buffer-file-name))))
   (switch-to-buffer-other-window "*ngsolve*")
+  )
+
+(defun run-netgen ()
+  (interactive)
+  (progn
+    (setq proc
+          (start-file-process-shell-command "netgen" "*netgen*"
+                                            (format "netgen %s"
+                                                    (shell-quote-argument (buffer-file-name))))
+          )
+    (set-process-filter proc 'shelllike-filter))
+  (switch-to-buffer-other-window "*netgen*")
+  (buffer-disable-undo)
+  (shell-mode)
   )
 
 (defun my-run-python ()
@@ -44,6 +58,7 @@
 (require 'python)
 (define-key python-mode-map (kbd "C-c n") 'run-ngsolve)
 (define-key python-mode-map (kbd "C-c y") 'my-run-python)
+(define-key python-mode-map (kbd "C-c m") 'run-netgen)
 
 
 (provide 'ngsolve-settings)

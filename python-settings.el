@@ -57,4 +57,15 @@ auto-mode-alist))
 (eval-after-load 'python
   '(define-key python-mode-map (kbd "C-c |") 'python-shell-send-region))
 
+;;emacs pytest
+(require 'python-pytest)
+(define-key dired-mode-map (kbd "C-c t") 'python-pytest-popup)
+(define-key python-mode-map (kbd "C-c t") 'python-pytest-popup)
+
+(defun python-pytest--project-root ()
+  "Find the project root directory."
+  (concat (projectile-project-root) "test/")
+  )
+  
+
 (provide 'python-settings)

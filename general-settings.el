@@ -12,7 +12,7 @@
 ; set PATH, because we don't load .bashrc
 ; function from https://gist.github.com/jakemcc/3887459
 (defun set-exec-env-vars()
-  (dolist (var (list "PATH" "PYTHONPATH" "LD_LIBRARY_PATH" "MKLROOT" "MKL_THREADING_LAYER"))
+  (dolist (var (list "PATH" "PYTHONPATH" "LD_LIBRARY_PATH" "MKLROOT" "MKL_THREADING_LAYER" "PYOPENGL_PLATFORM"))
     ;; (setenv var (getenv var))
     (let ((env-from-shell (shell-command-to-string (concat "/bin/bash -i -c 'echo -n $" var "' 2> /dev/null"))
                           ))

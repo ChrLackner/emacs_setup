@@ -23,7 +23,7 @@
 (defun run-ngsolve ()
   (interactive)
   (start-file-process-shell-command "ngsolve" "*ngsolve*"
-                                    (format "python3 -m ngsgui -no -dc %s"
+                                    (format "optirun python3 -m ngsgui %s -no -dc"
                                             (shell-quote-argument (buffer-file-name))))
   (switch-to-buffer-other-window "*ngsolve*")
   )

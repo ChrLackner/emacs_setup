@@ -109,4 +109,21 @@
 
 (require 'color-theme-sanityinc-tomorrow)
 
+;; M-x color-theme-sanityinc-tomorrow-day
+;; M-x color-theme-sanityinc-tomorrow-night
+;; M-x color-theme-sanityinc-tomorrow-blue
+;; M-x color-theme-sanityinc-tomorrow-bright
+;; M-x color-theme-sanityinc-tomorrow-eightiesf
+
+(set-face-attribute 'default nil
+                    :family "Source Code Pro"
+                    :height 150
+                    :weight 'normal
+                    :width 'normal)
+
+(require 'kotlin-mode)
+
+(require 'ace-window)
+(global-set-key (kbd "M-o") 'ace-window)
+
 (provide 'general-settings)

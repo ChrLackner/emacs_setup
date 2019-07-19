@@ -14,4 +14,9 @@
 (define-key org-mode-map (kbd "M-i p") 'org_insert_python_block)
 (define-key org-mode-map (kbd "M-i a") 'org_insert_align_block)
 
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
+(setq org-babel-python-command "python3")
+
 (provide 'org-mode-settings)

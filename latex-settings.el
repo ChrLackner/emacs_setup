@@ -7,5 +7,8 @@
 ;; (setq outline-minor-mode-prefix "\C-c \C-u")
 
 
+;; set latex size in org mode
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 1.3))
+
 
 (provide 'latex-settings)

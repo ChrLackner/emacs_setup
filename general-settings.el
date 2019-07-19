@@ -121,9 +121,7 @@
                     :weight 'normal
                     :width 'normal)
 
-(require 'kotlin-mode)
-
-(require 'ace-window)
-(global-set-key (kbd "M-o") 'ace-window)
+;; (require 'ace-window)
+;; (global-set-key (kbd "M-o") 'ace-window)
 
 (provide 'general-settings)

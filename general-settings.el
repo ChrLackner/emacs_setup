@@ -88,8 +88,8 @@
 (global-set-key (kbd "M-p") 'move-text-up)
 (global-set-key (kbd "M-n") 'move-text-down)
 
-(require 'symon)
-(symon-mode)
+;; (require 'symon)
+;; (symon-mode)
 
 ; window modifications
 ;; (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)

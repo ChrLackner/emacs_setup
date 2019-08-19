@@ -19,4 +19,7 @@
  '((python . t)))
 (setq org-babel-python-command "python3")
 
+;; Scale latex images
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 1.7))
+
 (provide 'org-mode-settings)

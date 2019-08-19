@@ -34,7 +34,7 @@
     (setq proc
           (start-file-process-shell-command "netgen" "*netgen*"
                                             (format "netgen %s"
-                                                    (shell-quote-argument (buffer-file-name))))
+                                                    (shell-quote-argument (file-relative-name (buffer-file-name)))))
           )
     (set-process-filter proc 'shelllike-filter))
   (switch-to-buffer-other-window "*netgen*")

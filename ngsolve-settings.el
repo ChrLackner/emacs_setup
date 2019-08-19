@@ -42,6 +42,20 @@
   (shell-mode)
   )
 
+(defun my-run-optirun-python ()
+  (interactive)
+  (progn
+    (setq proc
+          (start-file-process-shell-command "python" "python"
+                                            (format "optirun python %s"
+                                                    (shell-quote-argument (buffer-file-name))))
+          )
+    (set-process-filter proc 'shelllike-filter))
+  (switch-to-buffer-other-window "python")
+  (buffer-disable-undo)
+  (shell-mode)
+  )
+
 (defun my-run-python ()
   (interactive)
   (progn
@@ -55,9 +69,12 @@
   (buffer-disable-undo)
   (shell-mode)
   )
+
+
 (require 'python)
 (define-key python-mode-map (kbd "C-c n") 'run-ngsolve)
 (define-key python-mode-map (kbd "C-c y") 'my-run-python)
+(define-key python-mode-map (kbd "C-c o") 'my-run-optirun-python)
 (define-key python-mode-map (kbd "C-c m") 'run-netgen)
 
 

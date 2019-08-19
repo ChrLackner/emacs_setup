@@ -25,6 +25,25 @@
 (defun demangle-at-point ()
   (interactive)
    (message (shell-command-to-string (concat "c++filt _" (thing-at-point 'word))))
- )
+   )
+
+
+(defun insert-header-guard (guardstr)
+  "Insert a header guard named GUARDSTR in a c++ file."
+  (interactive "sHeader guard: ")
+  (progn
+    (insert "#ifndef " guardstr "\n")
+    (insert "#define " guardstr "\n\n")
+    (save-excursion
+      (insert "\n\n")
+      (insert "#endif // " guardstr))))
+
+(defun insert-namespace (name)
+  "Insert a namespace"
+  (interactive "sNamespace name: ")
+  (progn
+    (insert "namespace " name "\n{\n  ")
+    (save-excursion
+      (insert "\n} // namespace " name))))
 
 (provide 'cpp-settings)

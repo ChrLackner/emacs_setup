@@ -54,6 +54,17 @@
 (global-unset-key (kbd "C-x C-c"))
 (global-unset-key (kbd "C-z"))
 
+
+
+(defun build (prog)
+  (interactive
+   (list (completing-read "Source: " (directory-files "~/gitlab/source"))))
+  (if (string= prog "netgen") (compile (format "make -j -C ~/gitlab/build/ngsolve/netgen install"))
+    (if (file-exists-p (format "~/gitlab/source/%s/setup.py" prog))
+        (async-shell-command (format "python3 -m pip install --no-deps --user ~/gitlab/source/%s" prog))
+      (compile (format "make -j -C ~/gitlab/build/%s install" prog)))))
+
+
 ;; window deciation
 ;; press [pause]
 (defadvice pop-to-buffer (before cancel-other-window first)

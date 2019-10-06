@@ -47,23 +47,21 @@
 (setq auto-save-default nil)
 
 ; highlight parentheses when the cursor is next to them
-(require 'paren)
+(use-package paren
+  :ensure t)
 (show-paren-mode 1)
 
 ;; override the exit key and the minimize key (emacs freezes afterwards)
 (global-unset-key (kbd "C-x C-c"))
 (global-unset-key (kbd "C-z"))
 
-
-
 (defun build (prog)
   (interactive
-   (list (completing-read "Source: " (directory-files "~/gitlab/source"))))
-  (if (string= prog "netgen") (compile (format "make -j -C ~/gitlab/build/ngsolve/netgen install"))
-    (if (file-exists-p (format "~/gitlab/source/%s/setup.py" prog))
-        (async-shell-command (format "python3 -m pip install --no-deps --user ~/gitlab/source/%s" prog))
-      (compile (format "make -j -C ~/gitlab/build/%s install" prog)))))
-
+   (list (completing-read "Source: " (directory-files "~/git/source"))))
+  (if (string= prog "netgen") (compile (format "make -j -C ~/git/build/ngsolve/netgen install"))
+    (if (file-exists-p (format "~/git/source/%s/setup.py" prog))
+        (async-shell-command (format "python3 -m pip install --no-deps --user ~/git/source/%s" prog))
+      (compile (format "make -j -C ~/git/build/%s install" prog)))))
 
 ;; window deciation
 ;; press [pause]
@@ -92,7 +90,8 @@
 
 (put 'narrow-to-region 'disabled nil)
 
-(require 'move-text)
+(use-package move-text
+  :ensure t)
 (global-set-key (kbd "M-p") 'move-text-up)
 (global-set-key (kbd "M-n") 'move-text-down)
 
@@ -115,7 +114,8 @@
 ;; set highlight color
 (set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
 
-(require 'color-theme-sanityinc-tomorrow)
+(use-package color-theme-sanityinc-tomorrow
+  :ensure t)
 
 ;; M-x color-theme-sanityinc-tomorrow-day
 ;; M-x color-theme-sanityinc-tomorrow-night
@@ -128,8 +128,5 @@
                     :height 150
                     :weight 'normal
                     :width 'normal)
-
-;; (require 'ace-window)
-;; (global-set-key (kbd "M-o") 'ace-window)
 
 (provide 'general-settings)

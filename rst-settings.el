@@ -6,6 +6,7 @@
 
 (add-hook 'rst-mode-hook 'my-rst-mode-hook)
 
-(require 'markdown-mode)
+(use-package markdown-mode
+  :ensure t)
 
 (provide 'rst-settings)

@@ -23,7 +23,7 @@
 (defun run-ngsolve ()
   (interactive)
   (start-file-process-shell-command "ngsolve" "*ngsolve*"
-                                    (format "optirun python3 -m ngsgui %s -no -dc"
+                                    (format "python -m ngsgui %s -no -dc"
                                             (shell-quote-argument (buffer-file-name))))
   (switch-to-buffer-other-window "*ngsolve*")
   )
@@ -71,7 +71,8 @@
   )
 
 
-(require 'python)
+(use-package python
+  :ensure t)
 (define-key python-mode-map (kbd "C-c n") 'run-ngsolve)
 (define-key python-mode-map (kbd "C-c y") 'my-run-python)
 (define-key python-mode-map (kbd "C-c o") 'my-run-optirun-python)

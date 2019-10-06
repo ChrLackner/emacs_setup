@@ -26,8 +26,10 @@
 ;; GDB configuration
 ;; =================================
 
-(require 'gud)
-(require 'gdb-mi)
+(use-package gud
+  :ensure t)
+(use-package gdb-mi
+  :ensure t)
 (setq gdb-many-windows t)
 (setq gdb-use-separate-io-buffer t)
 

@@ -68,4 +68,12 @@
 
 (advice-add 'org-create-formula-image :around #'org-renumber-environment)
 
+
+;; trello ====================
+
+(use-package org-trello
+  :ensure t)
+
+(custom-set-variables '(org-trello-files '("~/org/trello/ngs.org" "")))
+
 (provide 'org-mode-settings)

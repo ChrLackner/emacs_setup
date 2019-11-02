@@ -34,6 +34,8 @@
 (add-hook 'c-mode-common-hook #'setup-flycheck-rtags)
 (add-hook 'after-init-hook 'global-company-mode)
 
+(rtags-start-process-unless-running)
+
 (use-package jedi
   :ensure t)
 (add-hook 'python-mode-hook 'jedi:setup)

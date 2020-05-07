@@ -125,7 +125,7 @@
 
 (set-face-attribute 'default nil
                     :family "Source Code Pro"
-                    :height 150
+                    :height 140
                     :weight 'normal
                     :width 'normal)
 
@@ -137,5 +137,17 @@
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+;; better shell
+(use-package shx
+  :ensure t)
+
+
+;; ansi colors in shell
+(require 'ansi-color)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+;; improve long line
+;; (set bidi-inhibit-bpa t)
 
 (provide 'general-settings)

@@ -42,4 +42,28 @@
     (save-excursion
       (insert "\n} // namespace " name))))
 
+(ignore-errors
+  (require 'ansi-color)
+  (defun my-colorize-compilation-buffer ()
+    (when (eq major-mode 'compilation-mode)
+      (ansi-color-apply-on-region compilation-filter-start (point-max))))
+  (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
+
+
+;; ;; format using clang-format
+;; (require 'clang-format)
+;; (setq clang-format-style-option "llvm")
+
+;; (define-key c-mode-base-map (kbd "C-M-\\")
+;;   (function clang-format-region))
+;; (define-key c-mode-base-map (kbd "C-i")
+;;   (function clang-format))
+
+;; (with-eval-after-load 'cc-mode
+;;   (fset 'c-indent-region 'clang-format-region))
+
+(require 'cff)
+(define-key c-mode-base-map (kbd "M-o")
+  (function cff-find-other-file))
+
 (provide 'cpp-settings)

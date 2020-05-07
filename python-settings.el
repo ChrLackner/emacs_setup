@@ -4,6 +4,6 @@
 
 (provide 'python-settings)
 
-(setq python-shell-interpreter "ipython")
+(setq python-shell-interpreter "python3")
 
 (provide 'python-settings)

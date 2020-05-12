@@ -150,4 +150,11 @@
 ;; improve long line
 ;; (set bidi-inhibit-bpa t)
 
+(defun open-ngsolve-file (filename)
+  "Open file in NGSolve repo"
+  (interactive (list (completing-read "File name: " (mapcar 'file-name-nondirectory (directory-files-recursively "~/git/source/ngsolve" ".*\.hpp")))))
+  (find-file (car (cl-remove-if (lambda (k) (string-match-p ".*\.#.*" k)) (directory-files-recursively "~/git/source/ngsolve" (concat ".*" filename))))))
+
+(global-set-key (kbd "C-x C-l") 'open-ngsolve-file)
+
 (provide 'general-settings)

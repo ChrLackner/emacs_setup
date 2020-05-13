@@ -157,4 +157,8 @@
 
 (global-set-key (kbd "C-x C-l") 'open-ngsolve-file)
 
+;; better pdf tools
+(require 'pdf-tools)
+(pdf-loader-install)
+
 (provide 'general-settings)

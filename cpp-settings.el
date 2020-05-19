@@ -42,12 +42,11 @@
     (save-excursion
       (insert "\n} // namespace " name))))
 
-(ignore-errors
-  (require 'ansi-color)
-  (defun my-colorize-compilation-buffer ()
-    (when (eq major-mode 'compilation-mode)
-      (ansi-color-apply-on-region compilation-filter-start (point-max))))
-  (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
+(require 'ansi-color)
+(defun my-colorize-compilation-buffer ()
+  (when (eq major-mode 'compilation-mode)
+    (ansi-color-apply-on-region compilation-filter-start (point-max))))
+(add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer)
 
 
 ;; ;; format using clang-format
@@ -65,5 +64,23 @@
 (require 'cff)
 (define-key c-mode-base-map (kbd "M-o")
   (function cff-find-other-file))
+
+(defun my-next-error ()
+  "Jump to next error - not warning"
+  (interactive)
+  (compilation-set-skip-threshold 2)
+  (compilation-next-error 1)
+  (compilation-set-skip-threshold 1))
+
+(defun my-previous-error ()
+  "Jump to next error - not warning"
+  (interactive)
+  (compilation-set-skip-threshold 2)
+  (compilation-next-error -1)
+  (compilation-set-skip-threshold 1))
+
+
+(define-key compilation-mode-map (kbd "C-x M-n") 'my-next-error)
+(define-key compilation-mode-map (kbd "C-x M-p") 'my-previous-error)
 
 (provide 'cpp-settings)

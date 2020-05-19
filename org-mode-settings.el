@@ -78,16 +78,17 @@
 
 (custom-set-variables '(org-trello-files '("~/org/trello/ngs.org" "")))
 
-(defun my-org-screenshot ()
+(defun my-org-screenshot (name)
   "Take a screenshot into a time stamped unique-named file in the
 same directory as the org-buffer and insert a link to this file."
-  (interactive)
+  (interactive "sFile name: ")
   (setq filename
         (concat
          (make-temp-name
-          (concat (buffer-file-name)
-                  "_"
-                  (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+          (concat default-directory
+                  "org_images/"
+                  name)) ".png"))
+  (message (concat "stored in " filename))
   (call-process "import" nil nil nil filename)
   (insert (concat "[[" filename "]]"))
   (org-display-inline-images))

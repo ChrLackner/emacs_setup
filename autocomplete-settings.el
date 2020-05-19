@@ -85,6 +85,11 @@ If called with prefix, open first match in other window"
 (add-hook 'c-mode-common-hook #'setup-flycheck-rtags)
 (add-hook 'after-init-hook 'global-company-mode)
 
+(define-key c-mode-base-map (kbd "C-x C-n")
+  (function rtags-next-match))
+(define-key c-mode-base-map (kbd "C-x C-p")
+  (function rtags-previous-match))
+
 (rtags-start-process-unless-running)
 
 (use-package jedi

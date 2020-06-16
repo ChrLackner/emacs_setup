@@ -83,4 +83,6 @@
 (define-key compilation-mode-map (kbd "C-x M-n") 'my-next-error)
 (define-key compilation-mode-map (kbd "C-x M-p") 'my-previous-error)
 
+(custom-set-variables '(c-noise-macro-names '("constexpr")))
+
 (provide 'cpp-settings)

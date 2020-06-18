@@ -63,6 +63,11 @@
         (async-shell-command (format "python3 -m pip install --no-deps --user ~/git/source/%s" prog))
       (compile (format "make -j -C ~/git/build/%s install" prog)))))
 
+(defun reconfigure (prog)
+  (interactive
+   (list (completing-read "Source: " (directory-files "~/git/build"))))
+  (async-shell-command (format "reconfigure %s" prog)))
+
 ;; window deciation
 ;; press [pause]
 (defadvice pop-to-buffer (before cancel-other-window first)

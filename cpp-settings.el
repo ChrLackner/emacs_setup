@@ -4,15 +4,6 @@
 
 (require 'cc-mode)
 
-;; (require 'dired)
-;; (define-key dired-mode-map (kbd "C-c c") (lambda () (interactive) (compile "make -j")))
-;; (define-key dired-mode-map (kbd "C-c i") (lambda () (interactive) (compile "make -j install")))
-
-;; (require 'compile)
-;; (define-key compilation-mode-map (kbd "C-c c") (lambda () (interactive) (compile "make -j")))
-;; (define-key compilation-mode-map (kbd "C-c i") (lambda () (interactive) (compile "make -j install")))
-
-
 (fset 'add_block_brackets
    [return ?\{ return return ?\} up tab])
 
@@ -48,18 +39,6 @@
     (ansi-color-apply-on-region compilation-filter-start (point-max))))
 (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer)
 
-
-;; ;; format using clang-format
-;; (require 'clang-format)
-;; (setq clang-format-style-option "llvm")
-
-;; (define-key c-mode-base-map (kbd "C-M-\\")
-;;   (function clang-format-region))
-;; (define-key c-mode-base-map (kbd "C-i")
-;;   (function clang-format))
-
-;; (with-eval-after-load 'cc-mode
-;;   (fset 'c-indent-region 'clang-format-region))
 
 (require 'cff)
 (define-key c-mode-base-map (kbd "M-o")

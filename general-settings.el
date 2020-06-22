@@ -5,9 +5,11 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
-(package-initialize)
 
 (require 'use-package)
+
+;; Avoid performance issues in files with very long lines.
+(global-so-long-mode 1)
 
 ; set PATH, because we don't load .bashrc
 ; function from https://gist.github.com/jakemcc/3887459

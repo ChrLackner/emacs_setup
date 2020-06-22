@@ -168,4 +168,10 @@
 (require 'pdf-tools)
 (pdf-loader-install)
 
+
+;; set encoding to utf8
+(setenv "LANG" "en_US.UTF-8")
+(setenv "LC_ALL" "en_US.UTF-8")
+(setenv "LC_CTYPE" "en_US.UTF-8")
+
 (provide 'general-settings)

@@ -25,6 +25,34 @@
  '((python . t)))
 (setq org-babel-python-command "python3")
 
+;; lualatex preview
+(setq org-latex-pdf-process
+  '("lualatex -shell-escape -interaction nonstopmode %f"
+    "lualatex -shell-escape -interaction nonstopmode %f"))
+
+(setq luamagick '(luamagick :programs ("lualatex" "convert")
+       :description "pdf > png"
+       :message "you need to install lualatex and imagemagick."
+       :use-xcolor t
+       :image-input-type "pdf"
+       :image-output-type "png"
+       :image-size-adjust (1.0 . 1.0)
+       :latex-compiler ("lualatex -interaction nonstopmode -output-directory %o %f")
+       :image-converter ("convert -density %D -trim -antialias %f -quality 100 %O")))
+
+(add-to-list 'org-preview-latex-process-alist luamagick)
+
+(setq org-preview-latex-default-process 'luamagick)
+
+(with-eval-after-load "ox-latex"
+  (add-to-list 'org-latex-classes
+               '("scrarticle" "\\documentclass{scrarticle}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
 ;; Scale latex images
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.7))
 ;; continuous line numbering for align blocks

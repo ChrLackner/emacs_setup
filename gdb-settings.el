@@ -39,33 +39,33 @@
 
 (defun gdb-setup-windows ()
   "Define layout for gdb-many-windows"
-  (gdb-get-buffer-create 'gdb-locals-buffer)
+  ;; (gdb-get-buffer-create 'gdb-locals-buffer)
   (gdb-get-buffer-create 'gdb-stack-buffer)
-  (gdb-get-buffer-create 'gdb-breakpoints-buffer)
+  ;; (gdb-get-buffer-create 'gdb-breakpoints-buffer)
   (set-window-dedicated-p (selected-window) nil)
   (switch-to-buffer gud-comint-buffer)
   (delete-other-windows)
   (let ((win0 (selected-window))
-        (win1 (split-window nil ( / ( * (window-height) 3) 4)))
-        (win2 (split-window nil ( / (window-height) 3)))
-        (win3 (split-window-right)))
-    (gdb-set-window-buffer (gdb-locals-buffer-name) nil win3)
-    (select-window win2)
+        ;; (win1 (split-window nil ( / ( * (window-height) 3) 4)))
+        ;; (win2 (split-window nil ( / (window-height) 3)))
+        (win1 (split-window nil ( / (window-height) 2)))
+        (win2 (split-window-right)))
+    ;; (gdb-set-window-buffer (gdb-locals-buffer-name) nil win3)
+    (gdb-set-window-buffer (gdb-stack-buffer-name) nil win2)
+    (select-window win1)
     (if gud-last-last-frame
         (set-window-buffer
-         win2
+         win1
          (gud-find-file (car gud-last-last-frame))))
     (setq gdb-source-window (selected-window))
-    (let ((win4 (split-window-right)))
+    (let ((win3 (split-window-right)))
       (gdb-set-window-buffer
-       (gdb-get-buffer-create 'gdb-inferior-io) nil win4))
-    (select-window win1)
-    (gdb-set-window-buffer (gdb-stack-buffer-name))
-    (let ((win5 (split-window-right)))
-      (gdb-set-window-buffer (if gdb-show-threads-by-default
-                                 (gdb-threads-buffer-name)
-                               (gdb-breakpoints-buffer-name))
-                             nil win5))
+       (gdb-get-buffer-create 'gdb-inferior-io) nil win3))
+    ;; (let ((win5 (split-window-right)))
+    ;;   (gdb-set-window-buffer (if gdb-show-threads-by-default
+    ;;                              (gdb-threads-buffer-name)
+    ;;                            (gdb-breakpoints-buffer-name))
+    ;;                          nil win5))
     (select-window win0)))
 
 

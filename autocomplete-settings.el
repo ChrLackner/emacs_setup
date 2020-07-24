@@ -98,4 +98,7 @@ If called with prefix, open first match in other window"
 (setq jedi:setup-keys t)                      ; optional
 (setq jedi:complete-on-dot t)                 ; optional
 
+
+;; (setq completion-cycle-threshold 3)
+
 (provide 'autocomplete-settings)

@@ -149,6 +149,8 @@
 (use-package shx
   :ensure t)
 
+(shx-global-mode 1)
+
 
 ;; ansi colors in shell
 (require 'ansi-color)

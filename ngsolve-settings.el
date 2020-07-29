@@ -10,7 +10,9 @@
       (shx))
     (goto-char (point-max))
     (move-beginning-of-line nil)
-    (kill-line)
+    (if (eq (point) (point-max))
+        nil
+      (kill-line))
     (insert (concat "cd " directory " && ngsolve " filename))
     (shx-send-input)
     )
@@ -26,7 +28,9 @@
       (shx))
     (goto-char (point-max))
     (move-beginning-of-line nil)
-    (kill-line)
+    (if (eq (point) (point-max))
+        nil
+      (kill-line))
     (insert (concat "cd " directory " && netgen " filename))
     (shx-send-input)
     )
@@ -42,7 +46,9 @@
       (shx))
     (goto-char (point-max))
     (move-beginning-of-line nil)
-    (kill-line)
+    (if (eq (point) (point-max))
+        nil
+      (kill-line))
     (insert (concat "cd " directory " && python " filename))
     (shx-send-input)
     )

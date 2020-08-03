@@ -123,6 +123,7 @@
 
 (use-package color-theme-sanityinc-tomorrow
   :ensure t)
+(load-theme 'sanityinc-tomorrow-night t)
 
 ;; M-x color-theme-sanityinc-tomorrow-day
 ;; M-x color-theme-sanityinc-tomorrow-night

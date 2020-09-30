@@ -31,9 +31,9 @@
     (save-excursion
       (insert "\n} // namespace " name))))
 
-(require 'cff)
-(define-key c-mode-base-map (kbd "M-o")
-  (function cff-find-other-file))
+(use-package cff
+  :bind (:map c-mode-base-map
+              ("M-o" . 'cff-find-other-file)))
 
 (defun my-next-error ()
   "Jump to next error - not warning"

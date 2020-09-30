@@ -36,6 +36,24 @@
     )
   )
 
+(defun my-run-mpi()
+  (interactive)
+  (let* ((filename (file-name-nondirectory buffer-file-name))
+         (directory  (file-name-directory buffer-file-name)))
+    (other-window 1)
+    (if (get-buffer "*shx*")
+        (switch-to-buffer "*shx*")
+      (shx))
+    (goto-char (point-max))
+    (move-beginning-of-line nil)
+    (if (eq (point) (point-max))
+        nil
+      (kill-line))
+    (insert (concat "cd " directory " && mpirun -np 6 python " filename))
+    (shx-send-input)
+    )
+  )
+
 (defun my-run-python ()
   (interactive)
   (let* ((filename (file-name-nondirectory buffer-file-name))
@@ -56,10 +74,10 @@
 
 
 (use-package python
-  :ensure t)
-(define-key python-mode-map (kbd "C-c n") 'run-ngsolve)
-(define-key python-mode-map (kbd "C-c y") 'my-run-python)
-(define-key python-mode-map (kbd "C-c m") 'run-netgen)
-
+  :bind (:map python-mode-map
+              ("C-c n" . 'run-ngsolve)
+              ("C-c y" . 'my-run-python)
+              ("C-c m" . 'run-netgen)
+              ("C-c p" . 'my-run-mpi)))
 
 (provide 'ngsolve-settings)

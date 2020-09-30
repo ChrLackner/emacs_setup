@@ -1,8 +1,7 @@
 
 (use-package ein
-  :ensure t)
-
-(setq ein:output-type-preference
-      '(emacs-lisp svg png jpeg html latex text javascript))
+  :config
+  (setq ein:output-type-preference
+        '(emacs-lisp javascript latex svg png jpeg html text)))
 
 (provide 'ein-settings)

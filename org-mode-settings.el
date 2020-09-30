@@ -1,60 +1,59 @@
 
 (use-package org
-  :ensure t)
-(global-set-key (kbd "C-c l") 'org-store-link)
-(setq org-startup-with-inline-images t)
-(setq org-support-shift-select t)
+  :bind (("C-c l" . 'org-store-link)
+         :map org-mode-map
+         (("M-i p" . 'org-insert-python-block)
+          ("M-i a" . 'org-insert-align-block)
+          ("M-i * a" . 'org-insert-align-start-block)))
 
-(setq org-image-actual-width nil)
+  :hook (org-mode . visual-line-mode)
 
-(fset 'org_insert_python_block
-   [?# ?+ ?B ?E ?G ?I ?N ?_ ?S ?R ?C ?  ?p ?y ?t ?h ?o ?n return return ?# ?+ ?E ?N ?D ?_ ?S ?R ?C ?\C-p])
+  :init
+  (fset 'org-insert-python-block
+        [?# ?+ ?B ?E ?G ?I ?N ?_ ?S ?R ?C ?  ?p ?y ?t ?h ?o ?n return return ?# ?+ ?E ?N ?D ?_ ?S ?R ?C ?\C-p])
+  (fset 'org-insert-align-star-block
+        [?\\ ?b ?e ?g ?i ?n ?\{ ?a ?l ?i ?g ?n ?* ?\} return return ?\\ ?e ?n ?d ?\{ ?a ?l ?i ?g ?n ?* ?\} up])
+  (fset 'org-insert-align-block
+        [?\\ ?b ?e ?g ?i ?n ?\{ ?a ?l ?i ?g ?n ?\} return return ?\\ ?e ?n ?d ?\{ ?a ?l ?i ?g ?n ?\} up])
+  :config
+  (setq org-startup-with-inline-images t)
+  (setq org-support-shift-select t)
+  (setq org-image-actual-width nil)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)))
+  (setq org-babel-python-command "python3")
+  (setq org-startup-indented t) ; Enable `org-indent-mode' by default
+  ;; Scale latex images
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.3))
+  (setq org-latex-pdf-process (list "latexmk -xelatex -f %f"))
+  (advice-add 'org-create-formula-image :around #'org-renumber-environment)
+  )
 
-(fset 'org_insert_align_star_block
-   [?\\ ?b ?e ?g ?i ?n ?\{ ?a ?l ?i ?g ?n ?* ?\} return return ?\\ ?e ?n ?d ?\{ ?a ?l ?i ?g ?n ?* ?\} up])
-
-(fset 'org_insert_align_block
-   [?\\ ?b ?e ?g ?i ?n ?\{ ?a ?l ?i ?g ?n ?\} return return ?\\ ?e ?n ?d ?\{ ?a ?l ?i ?g ?n ?\} up])
-
-(define-key org-mode-map (kbd "M-i p") 'org_insert_python_block)
-(define-key org-mode-map (kbd "M-i a") 'org_insert_align_block)
-(define-key org-mode-map (kbd "M-i * a") 'org_insert_align_star_block)
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)))
-(setq org-babel-python-command "python3")
-
-;; lualatex preview
-(setq org-latex-pdf-process
-  '("lualatex -shell-escape -interaction nonstopmode %f"
-    "lualatex -shell-escape -interaction nonstopmode %f"))
-
-(setq luamagick '(luamagick :programs ("lualatex" "convert")
-       :description "pdf > png"
-       :message "you need to install lualatex and imagemagick."
-       :use-xcolor t
-       :image-input-type "pdf"
-       :image-output-type "png"
-       :image-size-adjust (1.0 . 1.0)
-       :latex-compiler ("lualatex -interaction nonstopmode -output-directory %o %f")
-       :image-converter ("convert -density %D -trim -antialias %f -quality 100 %O")))
-
-(add-to-list 'org-preview-latex-process-alist luamagick)
-
-(setq org-preview-latex-default-process 'luamagick)
-
-(with-eval-after-load "ox-latex"
+(use-package ox-latex
+  :config
   (add-to-list 'org-latex-classes
                '("scrarticle" "\\documentclass{scrarticle}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+                 ("\\section{%s}" . "\\section{%s}")
+                 ("\\subsection{%s}" . "\\subsection{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph{%s}")
+                 )))
+  
 
-;; Scale latex images
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 1.7))
+
+
+(use-package org-ref
+  :config
+  (setq reftex-default-bibliography '("~/git/source/reports/bibliography/references.bib"))
+  ;; see org-ref for use of these variables
+  (setq org-ref-bibliography-notes "~/git/source/reports/bibliography/notes.org"
+        org-ref-default-bibliography '("~/git/source/reports/bibliography/references.bib")
+        org-ref-pdf-directory "~/git/source/reports/bibliography/bibtex-pdfs/")
+  )
+
+
 ;; continuous line numbering for align blocks
 (defun org-renumber-environment (orig-func &rest args)
   (let ((results '()) 
@@ -96,20 +95,12 @@
   
   (apply orig-func args))
 
-(advice-add 'org-create-formula-image :around #'org-renumber-environment)
-
-
-;; trello ====================
-
-(use-package org-trello
-  :ensure t)
-
-(custom-set-variables '(org-trello-files '("~/org/trello/ngs.org" "")))
 
 (defun my-org-screenshot (name)
   "Take a screenshot into a time stamped unique-named file in the
 same directory as the org-buffer and insert a link to this file."
   (interactive "sFile name: ")
+  (make-directory "org_images" :parents)
   (setq filename
         (concat
          (make-temp-name

@@ -19,10 +19,6 @@
 
 (require 'ein-settings)
 
-(require 'glsl-settings)
-
-(require 'latex-settings)
-
 (require 'gdb-settings)
 
 (provide 'my-settings)

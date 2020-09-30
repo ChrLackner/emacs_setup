@@ -1,8 +1,6 @@
 
-(use-package cmake-mode
-  :ensure t)
-
-(require 'cc-mode)
+(use-package cmake-mode)
+(use-package cc-mode)
 
 (fset 'add_block_brackets
    [return ?\{ return return ?\} up tab])
@@ -33,13 +31,6 @@
     (save-excursion
       (insert "\n} // namespace " name))))
 
-(require 'ansi-color)
-(defun my-colorize-compilation-buffer ()
-  (when (eq major-mode 'compilation-mode)
-    (ansi-color-apply-on-region compilation-filter-start (point-max))))
-(add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer)
-
-
 (require 'cff)
 (define-key c-mode-base-map (kbd "M-o")
   (function cff-find-other-file))
@@ -63,5 +54,8 @@
 (define-key compilation-mode-map (kbd "C-x M-p") 'my-previous-error)
 
 (custom-set-variables '(c-noise-macro-names '("constexpr")))
+
+(use-package glsl-mode
+  :mode (rx (or ".vert" ".frag" ".geom" ".tesc" ".tese" ".inc")))
 
 (provide 'cpp-settings)

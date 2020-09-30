@@ -70,13 +70,6 @@
    (list (completing-read "Source: " (directory-files "~/git/build"))))
   (async-shell-command (format "reconfigure %s" prog)))
 
-;; window deciation
-;; press [pause]
-(defadvice pop-to-buffer (before cancel-other-window first)
-  (ad-set-arg 1 nil))
-
-;;(ad-activate 'pop-to-buffer)
-
 ;; Toggle window dedication
 (defun toggle-window-dedicated ()
   "Toggle whether the current active window is dedicated or not"
@@ -98,12 +91,8 @@
 (put 'narrow-to-region 'disabled nil)
 
 (use-package move-text
-  :ensure t)
-(global-set-key (kbd "M-p") 'move-text-up)
-(global-set-key (kbd "M-n") 'move-text-down)
-
-;; (require 'symon)
-;; (symon-mode)
+  :bind (("M-p" . move-text-up)
+         ("M-n" . move-text-down)))
 
 ; window modifications
 ;; (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
@@ -118,45 +107,41 @@
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
 
-;; set highlight color
-(set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
 
 (use-package color-theme-sanityinc-tomorrow
-  :ensure t)
-(load-theme 'sanityinc-tomorrow-night t)
-
-;; M-x color-theme-sanityinc-tomorrow-day
-;; M-x color-theme-sanityinc-tomorrow-night
-;; M-x color-theme-sanityinc-tomorrow-blue
-;; M-x color-theme-sanityinc-tomorrow-bright
-;; M-x color-theme-sanityinc-tomorrow-eightiesf
-
-(set-face-attribute 'default nil
-                    :family "Source Code Pro"
-                    :height 140
-                    :weight 'normal
-                    :width 'normal)
+  :ensure t
+  :config
+  (load-theme 'sanityinc-tomorrow-night t)
+  (set-face-attribute 'default nil
+                      :family "Source Code Pro"
+                      :height 140
+                      :weight 'normal
+                      :width 'normal)
+  ;; set highlight color
+  (set-face-attribute 'region nil :background "#444444" :foreground "#cccccc"))
 
 (use-package smex
-  :ensure t)
-(smex-initialize)
-
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+  :config (smex-initialize)
+  :bind (("M-x" . 'smex)
+         ("M-X" . 'smex-major-mode-commands)
+         ;; This is your old M-x.
+         ("C-c C-c M-x" . 'execute-extended-command)))
 
 ;; better shell
 (use-package shx
-  :ensure t)
+  :ensure t
+  :config (shx-global-mode 1))
 
-(shx-global-mode 1)
-
+(defun my-colorize-compilation-buffer ()
+  (message "colorize compilation buffer")
+  (when (eq major-mode 'compilation-mode)
+    (ansi-color-apply-on-region compilation-filter-start (point-max))))
 
 ;; ansi colors in shell
-(require 'ansi-color)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-
+(use-package ansi-color
+  :hook ((shell-mode . ansi-color-for-comint-mode-on)
+         (compilation-filter . my-colorize-compilation-buffer)))
+  
 ;; improve long line
 ;; (set bidi-inhibit-bpa t)
 
@@ -168,9 +153,9 @@
 (global-set-key (kbd "C-x C-l") 'open-ngsolve-file)
 
 ;; better pdf tools
-(require 'pdf-tools)
-(pdf-loader-install)
-
+(use-package pdf-tools
+  :ensure t
+  :config (pdf-loader-install))
 
 ;; set encoding to utf8
 (setenv "LANG" "en_US.UTF-8")

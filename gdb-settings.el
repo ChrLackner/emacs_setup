@@ -26,67 +26,65 @@
 ;; GDB configuration
 ;; =================================
 
-(use-package gud
-  :ensure t)
+(use-package gud)
 (use-package gdb-mi
-  :ensure t)
-(setq gdb-many-windows t)
-(setq gdb-use-separate-io-buffer t)
+  :config
+  (setq gdb-many-windows t)
+  (setq gdb-use-separate-io-buffer t)
 
-;; ====================================
-;; GUI layout
-;; ====================================
+  ;; ====================================
+  ;; GUI layout
+  ;; ====================================
 
-(defun gdb-setup-windows ()
-  "Define layout for gdb-many-windows"
-  ;; (gdb-get-buffer-create 'gdb-locals-buffer)
-  (gdb-get-buffer-create 'gdb-stack-buffer)
-  ;; (gdb-get-buffer-create 'gdb-breakpoints-buffer)
-  (set-window-dedicated-p (selected-window) nil)
-  (switch-to-buffer gud-comint-buffer)
-  (delete-other-windows)
-  (let ((win0 (selected-window))
-        ;; (win1 (split-window nil ( / ( * (window-height) 3) 4)))
-        ;; (win2 (split-window nil ( / (window-height) 3)))
-        (win1 (split-window nil ( / (window-height) 2)))
-        (win2 (split-window-right)))
-    ;; (gdb-set-window-buffer (gdb-locals-buffer-name) nil win3)
-    (gdb-set-window-buffer (gdb-stack-buffer-name) nil win2)
-    (select-window win1)
-    (if gud-last-last-frame
-        (set-window-buffer
-         win1
-         (gud-find-file (car gud-last-last-frame))))
-    (setq gdb-source-window (selected-window))
-    (let ((win3 (split-window-right)))
-      (gdb-set-window-buffer
-       (gdb-get-buffer-create 'gdb-inferior-io) nil win3))
-    ;; (let ((win5 (split-window-right)))
-    ;;   (gdb-set-window-buffer (if gdb-show-threads-by-default
-    ;;                              (gdb-threads-buffer-name)
-    ;;                            (gdb-breakpoints-buffer-name))
-    ;;                          nil win5))
-    (select-window win0)))
+  (defun gdb-setup-windows ()
+    "Define layout for gdb-many-windows"
+    ;; (gdb-get-buffer-create 'gdb-locals-buffer)
+    (gdb-get-buffer-create 'gdb-stack-buffer)
+    ;; (gdb-get-buffer-create 'gdb-breakpoints-buffer)
+    (set-window-dedicated-p (selected-window) nil)
+    (switch-to-buffer gud-comint-buffer)
+    (delete-other-windows)
+    (let ((win0 (selected-window))
+          ;; (win1 (split-window nil ( / ( * (window-height) 3) 4)))
+          ;; (win2 (split-window nil ( / (window-height) 3)))
+          (win1 (split-window nil ( / (window-height) 2)))
+          (win2 (split-window-right)))
+      ;; (gdb-set-window-buffer (gdb-locals-buffer-name) nil win3)
+      (gdb-set-window-buffer (gdb-stack-buffer-name) nil win2)
+      (select-window win1)
+      (if gud-last-last-frame
+          (set-window-buffer
+           win1
+           (gud-find-file (car gud-last-last-frame))))
+      (setq gdb-source-window (selected-window))
+      (let ((win3 (split-window-right)))
+        (gdb-set-window-buffer
+         (gdb-get-buffer-create 'gdb-inferior-io) nil win3))
+      ;; (let ((win5 (split-window-right)))
+      ;;   (gdb-set-window-buffer (if gdb-show-threads-by-default
+      ;;                              (gdb-threads-buffer-name)
+      ;;                            (gdb-breakpoints-buffer-name))
+      ;;                          nil win5))
+      (select-window win0)))
 
 
-;; =======================================
-;; Restore window layout after closing gdb
-;; =======================================
+  ;; =======================================
+  ;; Restore window layout after closing gdb
+  ;; =======================================
 
-;; Select a register number which is unlikely to get used elsewere
-(defconst before-gdb-windows-config-register 313465989
-   "Internal used")
+  ;; Select a register number which is unlikely to get used elsewere
+  (defconst before-gdb-windows-config-register 313465989
+    "Internal used")
 
-(defvar before-gdb-windows-config nil)
+  (defvar before-gdb-windows-config nil)
 
-(defun set-before-gdb-windows-config (gdb)
-  (setq before-gdb-windows-config (window-configuration-to-register before-gdb-windows-config-register)))
+  (defun set-before-gdb-windows-config (gdb)
+    (setq before-gdb-windows-config (window-configuration-to-register before-gdb-windows-config-register)))
 
-(defun restore-before-gdb-windows-config ()
-  (jump-to-register before-gdb-windows-config-register))
+  (defun restore-before-gdb-windows-config ()
+    (jump-to-register before-gdb-windows-config-register))
 
-(advice-add 'gdb :before #'set-before-gdb-windows-config)
-(advice-add 'gdb-reset :after #'restore-before-gdb-windows-config)
-
+  (advice-add 'gdb :before #'set-before-gdb-windows-config)
+  (advice-add 'gdb-reset :after #'restore-before-gdb-windows-config))
 
 (provide 'gdb-settings)

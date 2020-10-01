@@ -8,23 +8,22 @@
 ;; ------------------ ccls setup --------------------------
 
 (use-package lsp-mode
-  :ensure t
   :commands lsp)
 (use-package lsp-ui
-  :ensure t
   :commands lsp-ui-mode)
 (use-package company-lsp
-  :ensure t
   :commands company-lsp)
 ;; (use-package flymake :ensure t)
 (setq lsp-prefer-flymake nil)
 (setq lsp-file-watch-threshold 3000)
 
 (use-package ccls
+  :defer t
   :hook ((c-mode c++-mode objc-mode cuda-mode) .
-         (lambda () (require 'ccls) (lsp))))
-(setq ccls-executable "/usr/bin/ccls")
-(setq lsp-enable-on-type-formatting nil)
+         (lambda () (require 'ccls) (lsp)))
+  :custom
+  (ccls-executable "/usr/bin/ccls")
+  (lsp-enable-on-type-formatting nil))
 
 ;; ----------------- end ccls setup ----------------------------
 

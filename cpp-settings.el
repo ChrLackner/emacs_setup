@@ -1,11 +1,14 @@
 
 (use-package cmake-mode)
-(use-package cc-mode)
+(use-package cc-mode
+  :init
+  (fset 'add_block_brackets
+        [return ?\{ return return ?\} up tab])
+  :bind (:map c-mode-base-map
+              ("C-{" . 'add_block_brackets))
+  )
 
-(fset 'add_block_brackets
-   [return ?\{ return return ?\} up tab])
 
-(define-key c-mode-base-map (kbd "C-{") 'add_block_brackets)
 
 (defun demangle-at-point ()
   (interactive)
@@ -50,8 +53,10 @@
   (compilation-set-skip-threshold 1))
 
 
-(define-key compilation-mode-map (kbd "C-x M-n") 'my-next-error)
-(define-key compilation-mode-map (kbd "C-x M-p") 'my-previous-error)
+(use-package compile
+  :bind (:map compilation-mode-map
+              ("C-x M-n" . 'my-next-error)
+              ("C-x M-p" . 'my-previous-error)))
 
 (custom-set-variables '(c-noise-macro-names '("constexpr")))
 

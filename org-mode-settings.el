@@ -16,21 +16,23 @@
   (fset 'org-insert-align-block
         [?\\ ?b ?e ?g ?i ?n ?\{ ?a ?l ?i ?g ?n ?\} return return ?\\ ?e ?n ?d ?\{ ?a ?l ?i ?g ?n ?\} up])
   :config
-  (setq org-startup-with-inline-images t)
-  (setq org-support-shift-select t)
-  (setq org-image-actual-width nil)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)))
-  (setq org-babel-python-command "python3")
-  (setq org-startup-indented t) ; Enable `org-indent-mode' by default
-  ;; Scale latex images
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.3))
-  (setq org-latex-pdf-process (list "latexmk -xelatex -f %f"))
   (advice-add 'org-create-formula-image :around #'org-renumber-environment)
+  :custom
+  (org-startup-with-inline-images t)
+  (org-support-shift-select t)
+  (org-image-actual-width nil)
+  (org-babel-python-command "python3")
+  (org-startup-indented t) ; Enable `org-indent-mode' by default
+  ;; Scale latex images
+  (org-latex-pdf-process (list "latexmk -xelatex -f %f"))
   )
 
 (use-package ox-latex
+  :defer t
   :config
   (add-to-list 'org-latex-classes
                '("scrarticle" "\\documentclass{scrarticle}"
@@ -45,12 +47,13 @@
 
 
 (use-package org-ref
-  :config
-  (setq reftex-default-bibliography '("~/git/source/reports/bibliography/references.bib"))
+  :defer t
+  :custom
+  (reftex-default-bibliography '("~/git/source/reports/bibliography/references.bib"))
   ;; see org-ref for use of these variables
-  (setq org-ref-bibliography-notes "~/git/source/reports/bibliography/notes.org"
-        org-ref-default-bibliography '("~/git/source/reports/bibliography/references.bib")
-        org-ref-pdf-directory "~/git/source/reports/bibliography/bibtex-pdfs/")
+  (org-ref-bibliography-notes "~/git/source/reports/bibliography/notes.org")
+  (org-ref-default-bibliography '("~/git/source/reports/bibliography/references.bib"))
+  (org-ref-pdf-directory "~/git/source/reports/bibliography/bibtex-pdfs/")
   )
 
 
@@ -101,15 +104,15 @@
 same directory as the org-buffer and insert a link to this file."
   (interactive "sFile name: ")
   (make-directory "org_images" :parents)
-  (setq filename
-        (concat
-         (make-temp-name
-          (concat default-directory
-                  "org_images/"
-                  name)) ".png"))
-  (message (concat "stored in " filename))
-  (call-process "import" nil nil nil filename)
-  (insert (concat "[[" filename "]]"))
-  (org-display-inline-images))
+  (let ((filename (concat
+                  (make-temp-name
+                   (concat default-directory
+                           "org_images/"
+                           name)) ".png")))
+    (message (concat "stored in " filename))
+    (call-process "import" nil nil nil filename)
+    (insert (concat "[[" filename "]]"))
+    (org-display-inline-images)))
+
 
 (provide 'org-mode-settings)

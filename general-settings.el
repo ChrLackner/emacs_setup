@@ -7,6 +7,7 @@
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 
 (require 'use-package)
+;; (setq use-package-compute-statistics t)
 
 ;; Avoid performance issues in files with very long lines.
 (global-so-long-mode 1)
@@ -109,7 +110,6 @@
 
 
 (use-package color-theme-sanityinc-tomorrow
-  :ensure t
   :config
   (load-theme 'sanityinc-tomorrow-night t)
   (set-face-attribute 'default nil
@@ -154,8 +154,9 @@
 
 ;; better pdf tools
 (use-package pdf-tools
-  :ensure t
-  :config (pdf-loader-install))
+  :magic ("%PDF" . pdf-view-mode)
+  :config
+  (pdf-tools-install :no-query))
 
 ;; set encoding to utf8
 (setenv "LANG" "en_US.UTF-8")

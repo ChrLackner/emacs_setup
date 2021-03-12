@@ -23,14 +23,6 @@
 (shell-command-to-string (concat "/bin/bash -i -c 'echo -n $" "PYTHONPATH" "' 2> /dev/null"))
 ; language
 (setq current-language-environment "English")
-; don't show the startup screen
-(setq inhibit-startup-screen t)
-
-; don't show the menu bar
-(menu-bar-mode 0)
-; don't show the tool bar
-(require 'tool-bar)
-(tool-bar-mode 0)
 
 ; don't indent with tabs
 (setq-default indent-tabs-mode nil)
@@ -38,14 +30,16 @@
 ; ignore case when searching
 (setq-default case-fold-search 1)
 
-; don't blink the cursor
-(blink-cursor-mode 0)
 
 ; auto revert buffers
 (auto-revert-mode)
 
 ; disable backup
 (setq backup-inhibited t)
+
+; disable lock files
+(setq create-lockfiles nil)
+
 ; disable auto save
 (setq auto-save-default nil)
 
@@ -56,7 +50,7 @@
 
 ;; override the exit key and the minimize key (emacs freezes afterwards)
 (global-unset-key (kbd "C-x C-c"))
-(global-unset-key (kbd "C-z"))
+;; (global-unset-key (kbd "C-z"))
 
 (defun build (prog)
   (interactive
@@ -108,17 +102,8 @@
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
 
+(add-hook 'find-file-hooks 'remove-dos-eol)
 
-(use-package color-theme-sanityinc-tomorrow
-  :config
-  (load-theme 'sanityinc-tomorrow-night t)
-  (set-face-attribute 'default nil
-                      :family "Source Code Pro"
-                      :height 140
-                      :weight 'normal
-                      :width 'normal)
-  ;; set highlight color
-  (set-face-attribute 'region nil :background "#444444" :foreground "#cccccc"))
 
 (use-package smex
   :config (smex-initialize)
@@ -143,13 +128,6 @@
   
 ;; improve long line
 ;; (set bidi-inhibit-bpa t)
-
-(defun open-ngsolve-file (filename)
-  "Open file in NGSolve repo"
-  (interactive (list (completing-read "File name: " (mapcar 'file-name-nondirectory (directory-files-recursively "~/git/source/ngsolve" ".*\.hpp")))))
-  (find-file (car (cl-remove-if (lambda (k) (string-match-p ".*\.#.*" k)) (directory-files-recursively "~/git/source/ngsolve" (concat ".*" filename))))))
-
-(global-set-key (kbd "C-x C-l") 'open-ngsolve-file)
 
 ;; better pdf tools
 (use-package pdf-tools

@@ -1,5 +1,9 @@
 
+(require 'theme-settings)
+
 (require 'general-settings)
+
+(require 'evil-settings)
 
 (require 'popup)
 
@@ -10,8 +14,6 @@
 (require 'autocomplete-settings)
 
 (require 'cpp-settings)
-
-(require 'python-settings)
 
 (require 'ngsolve-settings)
 

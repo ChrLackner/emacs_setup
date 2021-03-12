@@ -142,4 +142,10 @@
 (setenv "LC_ALL" "en_US.UTF-8")
 (setenv "LC_CTYPE" "en_US.UTF-8")
 
+(use-package yaml-mode
+  :ensure t
+  :mode "\\.yml\\'"
+  :bind (:map yaml-mode-map
+              (("\C-m" . 'newline-and-indent))))
+
 (provide 'general-settings)

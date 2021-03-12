@@ -4,7 +4,7 @@
          :map org-mode-map
          (("M-i p" . 'org-insert-python-block)
           ("M-i a" . 'org-insert-align-block)
-          ("M-i * a" . 'org-insert-align-start-block)))
+          ("M-i * a" . 'org-insert-align-star-block)))
 
   :hook (org-mode . visual-line-mode)
 
@@ -19,7 +19,7 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)))
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.3))
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.7))
   (advice-add 'org-create-formula-image :around #'org-renumber-environment)
   :custom
   (org-startup-with-inline-images t)
@@ -41,8 +41,41 @@
                  ("\\subsubsection{%s}" . "\\subsubsection{%s}")
                  ("\\paragraph{%s}" . "\\paragraph{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph{%s}")
-                 )))
-  
+                 ))
+  (add-to-list 'org-latex-classes
+  ;; beamer class, for presentations
+  '("beamer"
+     "\\documentclass[11pt]{beamer}\n
+      \\mode<{{{beamermode}}}>\n
+      \\usetheme{{{{beamertheme}}}}\n
+      \\usecolortheme{{{{beamercolortheme}}}}\n
+      \\beamertemplateballitem\n
+      \\setbeameroption{show notes}
+      \\usepackage[utf8]{inputenc}\n
+      \\usepackage[T1]{fontenc}\n
+      \\usepackage{hyperref}\n
+      \\usepackage{color}
+      \\usepackage{listings}
+      \\lstset{numbers=none,language=[ISO]C++,tabsize=4,
+  frame=single,
+  basicstyle=\\small,
+  showspaces=false,showstringspaces=false,
+  showtabs=false,
+  keywordstyle=\\color{blue}\\bfseries,
+  commentstyle=\\color{red},
+  }\n
+      \\usepackage{verbatim}\n
+      \\institute{{{{beamerinstitute}}}}\n
+       \\subject{{{{beamersubject}}}}\n"
+
+     ("\\section{%s}" . "\\section*{%s}")
+
+     ("\\begin{frame}[fragile]\\frametitle{%s}"
+       "\\end{frame}"
+       "\\begin{frame}[fragile]\\frametitle{%s}"
+       "\\end{frame}")))
+  )
+
 
 
 
@@ -106,13 +139,26 @@ same directory as the org-buffer and insert a link to this file."
   (make-directory "org_images" :parents)
   (let ((filename (concat
                   (make-temp-name
-                   (concat default-directory
-                           "org_images/"
+                   (concat "./org_images/"
                            name)) ".png")))
     (message (concat "stored in " filename))
     (call-process "import" nil nil nil filename)
+    (insert "# #+CAPTION: Caption\n")
+    (insert "#+ATTR_ORG: :width 400px\n")
+    (insert "#+ATTR_LATEX: :width 14cm :placement [H]\n")
     (insert (concat "[[" filename "]]"))
     (org-display-inline-images)))
 
+;; org jira integration
+;; (use-package org-jira
+;;   :custom
+;;   (jiralib-url "https://cerbsim.atlassian.net")
+;;   (org-jira-default-jql "sprint = W36-37 and (status = TODO or status = 'In Progress') ORDER BY status DESC")
+;;   ;; (setq request-log-level 'debug)
+;;   ;; (setq request-message-level 'debug)
+;;   )
+
+(use-package table
+  :ensure t)
 
 (provide 'org-mode-settings)

@@ -23,4 +23,5 @@
 
 (require 'gdb-settings)
 
+(require 'js-settings)
 (provide 'my-settings)

@@ -13,7 +13,7 @@
     (if (eq (point) (point-max))
         nil
       (kill-line))
-    (insert (concat "cd " directory " && ngsolve " filename))
+    (insert (concat "cd " directory " && nice ngsolve " filename))
     (shx-send-input)
     )
   )
@@ -31,7 +31,7 @@
     (if (eq (point) (point-max))
         nil
       (kill-line))
-    (insert (concat "cd " directory " && netgen " filename))
+    (insert (concat "cd " directory " && nice netgen " filename))
     (shx-send-input)
     )
   )
@@ -67,10 +67,11 @@
     (if (eq (point) (point-max))
         nil
       (kill-line))
-    (insert (concat "cd " directory " && python " filename))
+    (insert (concat "cd " directory " && nice python " filename))
     (shx-send-input)
     )
   )
+
 
 
 (use-package python

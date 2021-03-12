@@ -2,28 +2,61 @@
 
 ;; (use-package flycheck
 ;;   :ensure t)
-(use-package company
-  :hook (after-init . global-company-mode))
+;; (use-package company
+;;   :hook (after-init . global-company-mode))
 
 ;; ------------------ ccls setup --------------------------
 
+(use-package projectile
+  :ensure t)
+
+(use-package flycheck
+  :ensure t
+  :custom
+  (flycheck-check-syntax-automatically '(mode-enabled save))
+  )
+
 (use-package lsp-mode
-  :commands lsp)
-(use-package lsp-ui
-  :commands lsp-ui-mode)
-(use-package company-lsp
-  :commands company-lsp)
+  :commands lsp
+  :bind (:map evil-normal-state-map (("M-." . 'xref-find-definitions)))
+  :config
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection "pyls")
+                    :major-modes '(python-mode)
+                    :server-id 'pyls)
+   )
+  (setq lsp-prefer-flymake nil)
+  (setq lsp-pyls-plugins-pycodestyle-enabled nil)
+  (setq lsp-pyls-plugins-jedi-hover-enabled nil)
+  (setq lsp-pyls-plugins-mccabe-enabled nil)
+  (setq lsp-pyls-plugins-autopep8-enabled nil)
+  (setq lsp-pyls-plugins-pyflakes-enabled nil)
+  (setq lsp-file-watch-threshold 3000)
+  (setq lsp-diagnostics-provider :flycheck)
+  :hook ((python-mode . lsp))
+  :custom
+  (lsp-headerline-breadcrumb-enable t)
+  (lsp-enable-on-type-formatting nil))
+;; (use-package lsp-ui
+;;   :commands lsp-ui-mode)
+;; (use-package company-lsp
+;;   :commands company-lsp)
 ;; (use-package flymake :ensure t)
-(setq lsp-prefer-flymake nil)
-(setq lsp-file-watch-threshold 3000)
 
 (use-package ccls
   :defer t
   :hook ((c-mode c++-mode objc-mode cuda-mode) .
          (lambda () (require 'ccls) (lsp)))
   :custom
-  (ccls-executable "/usr/bin/ccls")
-  (lsp-enable-on-type-formatting nil))
+  (ccls-executable "/usr/bin/ccls"))
+
+(use-package company-lsp
+  :defer t
+  :commands company-lsp
+  :config (push 'company-lsp company-backends)
+  ) ;; add company-lsp as a backend
+
+
 
 ;; ----------------- end ccls setup ----------------------------
 
@@ -117,11 +150,11 @@
 
 ;; ------------------------ end rtags setup ------------------------
 
-(use-package jedi
-  :hook (python-mode . jedi:setup)
-  :config
-  (setq jedi:setup-keys t)
-  (setq jedi:complete-on-dot t))
-;; (setq completion-cycle-threshold 3)
+;; (use-package jedi
+;;   :hook (python-mode . jedi:setup)
+;;   :config
+;;   (setq jedi:setup-keys t)
+;;   (setq jedi:complete-on-dot t))
+;; ;; (setq completion-cycle-threshold 3)
 
 (provide 'autocomplete-settings)

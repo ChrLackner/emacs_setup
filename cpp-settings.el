@@ -58,8 +58,6 @@
               ("C-x M-n" . 'my-next-error)
               ("C-x M-p" . 'my-previous-error)))
 
-(custom-set-variables '(c-noise-macro-names '("constexpr")))
-
 (use-package glsl-mode
   :mode (rx (or ".vert" ".frag" ".geom" ".tesc" ".tese" ".inc")))
 

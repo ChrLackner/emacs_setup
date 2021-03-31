@@ -1,4 +1,8 @@
 
+
+;; something in org-latex-preview still needs this deprectated package...
+(require 'cl)
+
 (use-package org
   :bind (("C-c l" . 'org-store-link)
          :map org-mode-map

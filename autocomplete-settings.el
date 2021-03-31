@@ -52,7 +52,9 @@
   :config (push 'company-lsp company-backends)
   ) ;; add company-lsp as a backend
 
-
+(use-package yas
+  :defer t
+  :hook (lsp-mode . yas-minor-mode))
 
 ;; ----------------- end ccls setup ----------------------------
 

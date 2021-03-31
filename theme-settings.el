@@ -1,28 +1,29 @@
-
-
 ;; sanityinc tomorrow theme
-(use-package color-theme-sanityinc-tomorrow
-  :config
-  (load-theme 'sanityinc-tomorrow-night t)
-  (set-face-attribute 'default nil
-                      ;;:family "Source Code Pro"
-                      :family "Roboto Light"
-                      :height 140
-                      :weight 'normal
-                      :width 'normal)
-  ;; set highlight color
-  (set-face-attribute 'region nil :background "#444444" :foreground "#cccccc"))
+;; (use-package color-theme-sanityinc-tomorrow
+;;   :config
+;;   (load-theme 'sanityinc-tomorrow-night t)
+;;   (set-face-attribute 'default nil
+;;                       ;;:family "Source Code Pro"
+;;                       :family "Roboto Light"
+;;                       :height 140
+;;                       :weight 'normal
+;;                       :width 'normal)
+;;   ;; set highlight color
+;;   (set-face-attribute 'region nil :background "#444444" :foreground "#cccccc"))
 
-(add-to-list 'load-path "/home/christopher/.emacs.d/settings/resources/nano-emacs")
-;; (require 'nano-theme-dark)
-(require 'nano-base-colors)
+
+(let ((default-directory  "~/.emacs.d/settings/resources"))
+  (normal-top-level-add-subdirs-to-load-path))
+(require 'nano-theme-dark)
+(require 'nano-layout)
 (require 'nano-faces)
 (nano-faces)
 
-;; (require 'nano-theme)
-;; (nano-theme)
+(require 'nano-theme)
+(nano-theme)
 
-;; (require 'nano-modeline)
+(require 'nano-modeline)
+
 
 
 (set-frame-parameter nil 'undecorated t)

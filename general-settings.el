@@ -54,6 +54,9 @@
 (global-unset-key (kbd "C-x C-c"))
 ;; (global-unset-key (kbd "C-z"))
 
+;; I use this to switch between us-de keyboard layouts
+(global-unset-key (kbd "M-SPC"))
+
 (defun build (prog)
   (interactive
    (list (completing-read "Source: " (directory-files "~/git/source"))))

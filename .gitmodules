@@ -1,0 +1,3 @@
+[submodule "nano-emacs"]
+	path = resources/nano-emacs
+	url = git@github.com:ChrLackner/nano-emacs.git

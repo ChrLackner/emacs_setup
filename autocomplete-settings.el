@@ -1,20 +1,15 @@
 
 
-;; (use-package flycheck
-;;   :ensure t)
-;; (use-package company
-;;   :hook (after-init . global-company-mode))
-
 ;; ------------------ ccls setup --------------------------
 
 (use-package projectile
   :ensure t)
 
-(use-package flycheck
-  :ensure t
-  :custom
-  (flycheck-check-syntax-automatically '(mode-enabled save))
-  )
+;; (use-package flycheck
+;;   :ensure t
+;;   :custom
+;;   (flycheck-check-syntax-automatically '(mode-enabled save))
+;;   )
 
 (use-package lsp-mode
   :commands lsp
@@ -32,10 +27,11 @@
   (setq lsp-pyls-plugins-autopep8-enabled nil)
   (setq lsp-pyls-plugins-pyflakes-enabled nil)
   (setq lsp-file-watch-threshold 3000)
-  (setq lsp-diagnostics-provider :flycheck)
+  ;; (setq lsp-diagnostics-provider :flycheck)
+  (setq lsp-diagnostics-provider :none)
   :hook ((python-mode . lsp))
   :custom
-  (lsp-headerline-breadcrumb-enable t)
+  (lsp-headerline-breadcrumb-enable nil)
   (lsp-enable-on-type-formatting nil))
 ;; (use-package lsp-ui
 ;;   :commands lsp-ui-mode)

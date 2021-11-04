@@ -56,7 +56,8 @@
 (use-package compile
   :bind (:map compilation-mode-map
               ("C-x M-n" . 'my-next-error)
-              ("C-x M-p" . 'my-previous-error)))
+              ("C-x M-p" . 'my-previous-error)
+              ("c" . 'recompile)))
 
 (use-package glsl-mode
   :mode (rx (or ".vert" ".frag" ".geom" ".tesc" ".tese" ".inc")))

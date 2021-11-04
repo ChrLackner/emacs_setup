@@ -68,7 +68,7 @@
   (interactive
    (list (completing-read "Source: " (directory-files "~/git/source"))))
   (if (string= prog "netgen") (compile (format "make -j -C ~/git/build/ngsolve/netgen install"))
-    (if (file-exists-p (format "~/git/source/%s/setup.py" prog))
+    (if (and (file-exists-p (format "~/git/source/%s/setup.py" prog)) (not (string= prog "ngsolve")))
         (async-shell-command (format "python3 -m pip install --no-deps --user ~/git/source/%s" prog))
       (compile (format "make -j -C ~/git/build/%s install" prog)))))
 

@@ -40,6 +40,9 @@
 ; auto revert buffers
 (auto-revert-mode)
 
+; don't show windows eol as ^M
+(setq inhibit-windows-eol t)
+
 ; disable backup
 (setq backup-inhibited t)
 

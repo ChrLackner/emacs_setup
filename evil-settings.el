@@ -4,10 +4,16 @@
   :config
   (evil-mode 1)
   (add-to-list 'evil-emacs-state-modes 'special-mode)
+  (add-to-list 'evil-emacs-state-modes 'dired-mode)
+  (add-to-list 'evil-emacs-state-modes 'compilation-mode)
+  (add-to-list 'evil-emacs-state-modes 'edebug-mode)
+  ;; remove all keybindings from insert-state keymap
+  (setcdr evil-insert-state-map nil)
   :custom
   (evil-disable-insert-state-bindings t)
   (evil-shift-width 2)
   )
+
 
 (use-package evil-commentary
   :ensure t

@@ -1,9 +1,12 @@
 
 
+
 ;; ------------------ ccls setup --------------------------
 
 (use-package projectile
   :ensure t)
+
+(global-eldoc-mode -1)
 
 ;; (use-package flycheck
 ;;   :ensure t

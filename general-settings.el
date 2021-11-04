@@ -14,6 +14,9 @@
 ;; Avoid performance issues in files with very long lines.
 (global-so-long-mode 1)
 
+(use-package svg-tag-mode
+  :ensure t)
+
 ; set PATH, because we don't load .bashrc
 ; function from https://gist.github.com/jakemcc/3887459
 (defun set-exec-env-vars()

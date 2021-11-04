@@ -31,6 +31,7 @@
 
 ; don't indent with tabs
 (setq-default indent-tabs-mode nil)
+(setq js-indent-level 2)
 
 ; ignore case when searching
 (setq-default case-fold-search 1)

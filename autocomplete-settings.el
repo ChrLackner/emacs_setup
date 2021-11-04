@@ -26,17 +26,26 @@
   (setq lsp-pyls-plugins-mccabe-enabled nil)
   (setq lsp-pyls-plugins-autopep8-enabled nil)
   (setq lsp-pyls-plugins-pyflakes-enabled nil)
+  (setq lsp-lens-enable nil)
+  (setq lsp-diagnostics-enable nil)
   (setq lsp-file-watch-threshold 3000)
+  (setq gc-cons-threshold 100000000)
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
   ;; (setq lsp-diagnostics-provider :flycheck)
+  (setq lsp-modeline-diagnostics-enable nil)
   (setq lsp-diagnostics-provider :none)
-  :hook ((python-mode . lsp))
+  ;; (setq lsp-ui-sideline-enable nil)
+  ;; (setq lsp-ui-sideline-show-diagnostics nil)
+  ;; (setq lsp-ui-doc-enable nil)
+  ;; (setq company-auto-complete t)
+  :hook ((python-mode . lsp-deferred))
   :custom
   (lsp-headerline-breadcrumb-enable nil)
+  ;; (lsp-ui-doc-show-with-cursor nil)
+  ;; (lsp-ui-doc-show-with-mouse nil)
   (lsp-enable-on-type-formatting nil))
 ;; (use-package lsp-ui
 ;;   :commands lsp-ui-mode)
-;; (use-package company-lsp
-;;   :commands company-lsp)
 ;; (use-package flymake :ensure t)
 
 (use-package ccls
@@ -45,12 +54,6 @@
          (lambda () (require 'ccls) (lsp)))
   :custom
   (ccls-executable "/usr/bin/ccls"))
-
-(use-package company-lsp
-  :defer t
-  :commands company-lsp
-  :config (push 'company-lsp company-backends)
-  ) ;; add company-lsp as a backend
 
 (use-package yas
   :defer t

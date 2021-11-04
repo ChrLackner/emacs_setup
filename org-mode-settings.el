@@ -3,8 +3,11 @@
 ;; something in org-latex-preview still needs this deprectated package...
 (require 'cl)
 
+
 (use-package org
   :bind (("C-c l" . 'org-store-link)
+         ("C-c c" . 'org-capture)
+         ("C-c a" . 'org-agenda)
          :map org-mode-map
          (("M-i p" . 'org-insert-python-block)
           ("M-i a" . 'org-insert-align-block)
@@ -23,8 +26,8 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)))
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.7))
   (advice-add 'org-create-formula-image :around #'org-renumber-environment)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
   :custom
   (org-startup-with-inline-images t)
   (org-support-shift-select t)
@@ -33,6 +36,8 @@
   (org-startup-indented t) ; Enable `org-indent-mode' by default
   ;; Scale latex images
   (org-latex-pdf-process (list "latexmk -xelatex -f %f"))
+  (org-directory "~/org")
+  (org-default-notes-file (concat org-directory "/notes.org"))
   )
 
 (use-package ox-latex
@@ -164,5 +169,15 @@ same directory as the org-buffer and insert a link to this file."
 
 (use-package table
   :ensure t)
+
+;; (setq suv-org-personal-todo-file (concat org-directory "/todo.org"))
+
+;; ;; template spec: (<key> <short description> <type> <target> <template> <properties>)
+
+;; (setq org-capture-templates '(("t"
+;;                                "Personal todo"
+;;                                entry
+;;                                (file suv-org-personal-todo-file)
+;;                                "* TODO %^{Description}\n :LOGBOOK:\n  - Added: %U\n  :END:\n  %?")))
 
 (provide 'org-mode-settings)

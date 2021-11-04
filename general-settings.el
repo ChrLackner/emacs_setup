@@ -158,4 +158,7 @@
   :bind (:map yaml-mode-map
               (("\C-m" . 'newline-and-indent))))
 
+;; split window vertically at start
+(split-window-right)
+
 (provide 'general-settings)

@@ -81,41 +81,18 @@
               ("C-c m" . 'run-netgen)
               ("C-c p" . 'my-run-mpi)))
 
-
-
-(defvar netgen-geo-keywords
-  '("solid" "tlo" "boundaryconditionname"))
-
-(define-derived-mode netgen-geo-mode python-mode "Geo File"
+(define-derived-mode netgen-geo-mode prog-mode "Geo File"
     "Netgen geo file mode"
-    ;; you again used quote when you had '((mydsl-hilite))
-    ;; I just updated the variable to have the proper nesting (as noted above)
-    ;; and use the value directly here
-    ;; (setq font-lock-defaults mydsl-font-lock-defaults)
-
-    ;; when there's an override, use it
-    ;; otherwise it gets the default value
-    ;; (when mydsl-tab-width
-    ;;   (setq tab-width mydsl-tab-width))
-
-    ;; for comments
-    ;; overriding these vars gets you what (I think) you want
-    ;; they're made buffer local when you set them
     (setq comment-start "#")
     (setq comment-end "")
 
-
-    (font-lock-add-keywords nil '(("\\<\\(solid\\|tlo\\|boundaryconditionname\\|algebraic3d\\)\\>" . 'font-lock-type-face)))
-    ;; (font-lock-add-keywords nil '(("\\<\\(orthobrick\\|plane\\|cylinder\\|polyhedron\\|torus\\)\\>" . 'font-lock-function-name-face)))
-
-    ;; (font-lock-add-keywords nil '((rx (or "solid" "tlo")) . 'font-lock-keyword-face))
-
-    ;; (modify-syntax-entry ?# "< b" mydsl-mode-syntax-table)
-    ;; (modify-syntax-entry ?\n "> b" mydsl-mode-syntax-table)
-
-    ;; Note that there's no need to manually call `mydsl-mode-hook'; `define-derived-mode'
-    ;; will define `mydsl-mode' to call it properly right before it exits
+    (let ((map (make-sparse-keymap)))
+      (define-key map [C-c m] 'run-netgen)
+      map)
+    (font-lock-add-keywords nil '(("\\<\\(solid\\|tlo\\|boundaryconditionname\\|algebraic3d\\)\\>" . 'font-lock-builtin-face)))
+    (font-lock-add-keywords nil '(("\\<\\( orthobrick\\| plane\\| cylinder\\| polyhedron\\| torus\\)\\>" . 'font-lock-function-name-face)))
     )
+
 
 (add-to-list 'auto-mode-alist '("\\.geo\\'" . netgen-geo-mode))
 

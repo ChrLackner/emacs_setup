@@ -1,4 +1,6 @@
 
+(setq package-native-compile t)
+
 (require 'theme-settings)
 
 (require 'general-settings)
@@ -24,4 +26,7 @@
 (require 'gdb-settings)
 
 (require 'js-settings)
+
+;; (require 'email-settings)
+
 (provide 'my-settings)

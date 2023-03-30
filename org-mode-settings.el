@@ -159,6 +159,20 @@ same directory as the org-buffer and insert a link to this file."
     (insert (concat "[[" filename "]]"))
     (org-display-inline-images)))
 
+(defun my-markdown-screenshot (name)
+  "Take a screenshot into a time stamped unique-named file in the
+same directory as the org-buffer and insert a link to this file."
+  (interactive "sFile name: ")
+  (make-directory "md_images" :parents)
+  (let ((filename (concat
+                  (make-temp-name
+                   (concat "./md_images/"
+                           name)) ".png")))
+    (message (concat "stored in " filename))
+    (call-process "import" nil nil nil filename)
+    (insert (concat "![](" filename ")"))
+    (markdown-toggle-inline-images)))
+
 ;; org jira integration
 ;; (use-package org-jira
 ;;   :custom

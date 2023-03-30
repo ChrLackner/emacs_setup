@@ -1,6 +1,6 @@
 
 (use-package js-mode
-  :mode "\\.ts\\|.js\\'"
+  :mode "\\.js\\'"
   :config (setq js-indent-level 2)
   )
 
@@ -11,6 +11,10 @@
   (lsp-vetur-format-default-formatter-js "none")
   (lsp-vetur-validation-template nil))
 
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :config
+  (add-hook 'typescript-mode-hook #'lsp))
 
 (use-package vue-mode
   :mode "\\.vue\\'"

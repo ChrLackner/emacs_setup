@@ -13,7 +13,7 @@
     (if (eq (point) (point-max))
         nil
       (kill-line))
-    (insert (concat "cd " directory " && nice ngsolve " filename))
+    (insert (concat "cd " directory " && nice prime-run ngsolve --noConsole " filename))
     (shx-send-input)
     )
   )

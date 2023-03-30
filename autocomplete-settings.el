@@ -1,12 +1,64 @@
 
+(use-package quelpa
+  :ensure t)
+
+(quelpa
+ '(quelpa-use-package
+   :fetcher git
+   :url "https://github.com/quelpa/quelpa-use-package.git"))
+(require 'quelpa-use-package)
+
+(use-package editorconfig
+  :ensure t)
+
+(use-package copilot
+  :quelpa (copilot.el :fetcher github
+                      :repo "zerolfx/copilot.el"
+                      :branch "main"
+                      :ensure t
+                      :files ("dist" "*.el")))
+(add-hook 'prog-mode-hook 'copilot-mode)
+(define-key copilot-completion-map (kbd "M-<return>") 'copilot-accept-completion)
+(define-key copilot-completion-map (kbd "M-C-<return>") 'copilot-accept-completion-by-word)
+(define-key copilot-completion-map (kbd "M-<tab>") 'copilot-next-completion)
+
+(use-package lsp-pyright
+  :ensure t
+  :bind (:map evil-normal-state-map (("M-." . 'xref-find-definitions)))
+  :hook ((python-mode . lsp-deferred)
+         (c-mode . lsp-deferred)
+         (c++-mode . lsp-deferred))
+  :config
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
+  (setq gc-cons-threshold 1000000)
+  :custom
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-lens-enable nil)
+  (lsp-ui-sideline-enable nil)
+  (lsp-ui-doc-enable nil)
+  (lsp-modeline-code-actions nil)
+  (lsp-ui-sideline-enable nil)
+  )
 
 
 ;; ------------------ ccls setup --------------------------
 
-(use-package projectile
-  :ensure t)
+;; (use-package projectile
+  ;; :ensure t)
 
-(global-eldoc-mode -1)
+;; (global-eldoc-mode -1)
+
+;; (let ((default-directory  "~/.emacs.d/settings/resources"))
+;;   (normal-top-level-add-subdirs-to-load-path))
+
+;; (require 'yasnippet)
+;; (yas-global-mode 1)
+
+;; (require 'lsp-bridge)
+;; (global-lsp-bridge-mode)
+;; (setq lsp-bridge-complete-manually t)
+;; (global-set-key (kbd "M-.") 'lsp-bridge-find-def-other-window)
+;; (global-set-key (kbd "M-,") 'lsp-bridge-find-def-return)
 
 ;; (use-package flycheck
 ;;   :ensure t
@@ -14,53 +66,57 @@
 ;;   (flycheck-check-syntax-automatically '(mode-enabled save))
 ;;   )
 
-(use-package lsp-mode
-  :commands lsp
-  :bind (:map evil-normal-state-map (("M-." . 'xref-find-definitions)))
-  :config
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection "pyls")
-                    :major-modes '(python-mode)
-                    :server-id 'pyls)
-   )
-  (setq lsp-prefer-flymake nil)
-  (setq lsp-pyls-plugins-pycodestyle-enabled nil)
-  (setq lsp-pyls-plugins-jedi-hover-enabled nil)
-  (setq lsp-pyls-plugins-mccabe-enabled nil)
-  (setq lsp-pyls-plugins-autopep8-enabled nil)
-  (setq lsp-pyls-plugins-pyflakes-enabled nil)
-  (setq lsp-lens-enable nil)
-  (setq lsp-diagnostics-enable nil)
-  (setq lsp-file-watch-threshold 3000)
-  (setq gc-cons-threshold 100000000)
-  (setq read-process-output-max (* 1024 1024)) ;; 1mb
-  ;; (setq lsp-diagnostics-provider :flycheck)
-  (setq lsp-modeline-diagnostics-enable nil)
-  (setq lsp-diagnostics-provider :none)
-  ;; (setq lsp-ui-sideline-enable nil)
-  ;; (setq lsp-ui-sideline-show-diagnostics nil)
-  ;; (setq lsp-ui-doc-enable nil)
-  ;; (setq company-auto-complete t)
-  :hook ((python-mode . lsp-deferred))
-  :custom
-  (lsp-headerline-breadcrumb-enable nil)
-  ;; (lsp-ui-doc-show-with-cursor nil)
-  ;; (lsp-ui-doc-show-with-mouse nil)
-  (lsp-enable-on-type-formatting nil))
+;; (use-package lsp-mode
+;;   :commands lsp
+;;   :bind (:map evil-normal-state-map (("M-." . 'xref-find-definitions)))
+;;   :config
+;;   (lsp-register-client
+;;    (make-lsp-client :new-connection (lsp-stdio-connection "pyls")
+;;                     :major-modes '(python-mode)
+;;                     :server-id 'pyls)
+;;    )
+;;   ;; (setq lsp-prefer-flymake nil)
+;;   ;; (setq lsp-prefer-capf t)
+;;   ;; (setq lsp-pyls-plugins-pycodestyle-enabled nil)
+;;   ;; (setq lsp-pyls-plugins-jedi-hover-enabled nil)
+;;   ;; (setq lsp-pyls-plugins-mccabe-enabled nil)
+;;   ;; (setq lsp-pyls-plugins-autopep8-enabled nil)
+;;   ;; (setq lsp-pyls-plugins-pyflakes-enabled nil)
+;;   ;; (setq lsp-lens-enable nil)
+;;   ;; (setq lsp-diagnostics-enable nil)
+;;   ;; (setq lsp-modeline-diagnostics-enable nil)
+;;   ;; (setq lsp-diagnostics-provider :none)
+;;   (setq lsp-file-watch-threshold 1000)
+;;   (setq gc-cons-threshold 10000000)
+;;   (setq read-process-output-max (* 1024 1024)) ;; 1mb
+;;   (setq company-idle-delay 0.1)
+;;   ;; (setq lsp-diagnostics-provider :flycheck)
+;;   ;; (setq lsp-ui-sideline-enable nil)
+;;   ;; (setq lsp-ui-sideline-show-diagnostics nil)
+;;   ;; (setq lsp-ui-doc-enable nil)
+;;   (setq company-auto-complete t)
+;;   ;; (setq lsp-print-performance t)
+;;   :hook ((python-mode . lsp-deferred))
+;;   :custom
+;;   
+;;   ;; (lsp-ui-doc-show-with-cursor nil)
+;;   ;; (lsp-ui-doc-show-with-mouse nil)
+;;   ;; (lsp-enable-on-type-formatting nil)
+;;   )
+
 ;; (use-package lsp-ui
 ;;   :commands lsp-ui-mode)
-;; (use-package flymake :ensure t)
+  ;; (use-package flymake :ensure t)
 
-(use-package ccls
-  :defer t
-  :hook ((c-mode c++-mode objc-mode cuda-mode) .
-         (lambda () (require 'ccls) (lsp)))
-  :custom
-  (ccls-executable "/usr/bin/ccls"))
+;; (use-package ccls
+;;   :hook ((c-mode c++-mode objc-mode cuda-mode) .
+;;          (lambda () (require 'ccls) (lsp)))
+;;   :custom
+;;   (ccls-executable "/usr/bin/ccls"))
 
-(use-package yas
-  :defer t
-  :hook (lsp-mode . yas-minor-mode))
+;; (use-package yas
+;;   :defer t
+;;   :hook (lsp-mode . yas-minor-mode))
 
 ;; ----------------- end ccls setup ----------------------------
 

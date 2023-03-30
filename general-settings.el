@@ -14,6 +14,12 @@
 ;; Avoid performance issues in files with very long lines.
 (global-so-long-mode 1)
 
+;; break on word endings
+(global-visual-line-mode t)
+(define-key visual-line-mode-map [remap kill-line] nil)
+(define-key visual-line-mode-map [remap move-beginning-of-line] nil)
+(define-key visual-line-mode-map [remap move-end-of-line] nil)
+
 (use-package svg-tag-mode
   :ensure t)
 
@@ -59,7 +65,8 @@
 
 ;; override the exit key and the minimize key (emacs freezes afterwards)
 (global-unset-key (kbd "C-x C-c"))
-;; (global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-x C-z"))
 
 ;; I use this to switch between us-de keyboard layouts
 (global-unset-key (kbd "M-SPC"))
@@ -67,10 +74,10 @@
 (defun build (prog)
   (interactive
    (list (completing-read "Source: " (directory-files "~/git/source"))))
-  (if (string= prog "netgen") (compile (format "make -j -C ~/git/build/ngsolve/netgen install"))
+  (if (string= prog "netgen") (compile (format "make -j6 -C ~/git/build/ngsolve/netgen install"))
     (if (and (file-exists-p (format "~/git/source/%s/setup.py" prog)) (not (string= prog "ngsolve")))
         (async-shell-command (format "python3 -m pip install --no-deps --user ~/git/source/%s" prog))
-      (compile (format "make -j -C ~/git/build/%s install" prog)))))
+      (compile (format "make -j6 -C ~/git/build/%s install" prog)))))
 
 (defun reconfigure (prog)
   (interactive
@@ -161,4 +168,10 @@
 ;; split window vertically at start
 (split-window-right)
 
+(defun beautify-json ()
+  (interactive)
+  (let ((b (if mark-active (min (point) (mark)) (point-min)))
+        (e (if mark-active (max (point) (mark)) (point-max))))
+    (shell-command-on-region b e
+     "jq " (current-buffer) t)))
 (provide 'general-settings)

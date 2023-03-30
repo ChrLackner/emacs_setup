@@ -3,6 +3,7 @@
 ;; something in org-latex-preview still needs this deprectated package...
 (require 'cl)
 
+(setq calendar-week-start-day 1)
 
 (use-package org
   :bind (("C-c l" . 'org-store-link)
@@ -27,7 +28,7 @@
    'org-babel-load-languages
    '((python . t)))
   (advice-add 'org-create-formula-image :around #'org-renumber-environment)
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.2))
   :custom
   (org-startup-with-inline-images t)
   (org-support-shift-select t)
@@ -179,5 +180,11 @@ same directory as the org-buffer and insert a link to this file."
 ;;                                entry
 ;;                                (file suv-org-personal-todo-file)
 ;;                                "* TODO %^{Description}\n :LOGBOOK:\n  - Added: %U\n  :END:\n  %?")))
+
+
+(use-package zotxt
+  :ensure t)
+
+(setq org-zotxt-link-description-style :betterbibtexkey)
 
 (provide 'org-mode-settings)

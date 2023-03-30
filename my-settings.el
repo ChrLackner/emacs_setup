@@ -29,4 +29,6 @@
 
 ;; (require 'email-settings)
 
+(require 'gpt-settings)
+
 (provide 'my-settings)

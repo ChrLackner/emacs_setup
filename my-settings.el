@@ -7,7 +7,7 @@
 
 (require 'evil-settings)
 
-(require 'popup)
+;; (require 'popup)
 
 (require 'org-mode-settings)
 
@@ -21,7 +21,7 @@
 
 (require 'rst-settings)
 
-(require 'ein-settings)
+;; (require 'ein-settings)
 
 (require 'gdb-settings)
 

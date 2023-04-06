@@ -41,7 +41,10 @@
       jit-lock-stealth-nice 0)
 (setq font-lock-maximum-decoration 5)
 (setq-default font-lock-multiline t)
-(set-frame-parameter nil 'undecorated t)
+
+(if (not (eq system-type 'windows-nt))
+    (set-frame-parameter nil 'undecorated t))
+
 ; don't show the startup screen
 (setq inhibit-startup-screen t)
 ; don't show the tool bar

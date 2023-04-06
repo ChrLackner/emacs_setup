@@ -22,22 +22,29 @@
 (define-key copilot-completion-map (kbd "M-C-<return>") 'copilot-accept-completion-by-word)
 (define-key copilot-completion-map (kbd "M-<tab>") 'copilot-next-completion)
 
-(use-package lsp-pyright
-  :ensure t
-  :bind (:map evil-normal-state-map (("M-." . 'xref-find-definitions)))
-  :hook ((python-mode . lsp-deferred)
-         (c-mode . lsp-deferred)
-         (c++-mode . lsp-deferred))
-  :config
-  (setq read-process-output-max (* 1024 1024)) ;; 1mb
-  (setq gc-cons-threshold 1000000)
-  :custom
-  (lsp-headerline-breadcrumb-enable nil)
-  (lsp-lens-enable nil)
-  (lsp-ui-sideline-enable nil)
-  (lsp-ui-doc-enable nil)
-  (lsp-modeline-code-actions nil)
-  (lsp-ui-sideline-enable nil)
+
+;; get environment variable PATH
+
+
+(if (eq system-type 'windows-nt)
+    (setenv "PATH" (concat (getenv "PATH") (file-name-directory (executable-find "node")) ";"))
+  (use-package lsp-pyright
+    :ensure t
+    :bind (:map evil-normal-state-map (("M-." . 'xref-find-definitions)))
+    :hook ((python-mode . lsp-deferred)
+           (c-mode . lsp-deferred)
+           (c++-mode . lsp-deferred))
+    :config
+    (setq gc-cons-threshold 1000000)
+    (setq read-process-output-max (* 1024 1024)) ;; 1mb
+    :custom
+    (lsp-headerline-breadcrumb-enable nil)
+    (lsp-lens-enable nil)
+    (lsp-ui-sideline-enable nil)
+    (lsp-ui-doc-enable nil)
+    (lsp-modeline-code-actions nil)
+    (lsp-ui-sideline-enable nil)
+    )
   )
 
 
@@ -60,8 +67,40 @@
 ;; (global-set-key (kbd "M-.") 'lsp-bridge-find-def-other-window)
 ;; (global-set-key (kbd "M-,") 'lsp-bridge-find-def-return)
 
-;; (use-package flycheck
-;;   :ensure t
+;; ;; (use-package flycheck
+;; ;;   :ensure t
+;; ;;   :custom
+;; ;;   (flycheck-check-syntax-automatically '(mode-enabled save))
+;; ;;   )
+
+;; (use-package lsp-mode
+;;   :commands lsp
+;;   :bind (:map evil-normal-state-map (("M-." . 'xref-find-definitions)))
+;;   :config
+;;   (lsp-register-client
+;;    (make-lsp-client :new-connection (lsp-stdio-connection "pyls")
+;;                     :major-modes '(python-mode)
+;;                     :server-id 'pyls)
+;;    )
+;;   (setq lsp-prefer-flymake nil)
+;;   (setq lsp-pyls-plugins-pycodestyle-enabled nil)
+;;   (setq lsp-pyls-plugins-jedi-hover-enabled nil)
+;;   (setq lsp-pyls-plugins-mccabe-enabled nil)
+;;   (setq lsp-pyls-plugins-autopep8-enabled nil)
+;;   (setq lsp-pyls-plugins-pyflakes-enabled nil)
+;;   (setq lsp-lens-enable nil)
+;;   (setq lsp-diagnostics-enable nil)
+;;   (setq lsp-file-watch-threshold 3000)
+;;   (setq gc-cons-threshold 100000000)
+;;   (setq read-process-output-max (* 1024 1024)) ;; 1mb
+;;   ;; (setq lsp-diagnostics-provider :flycheck)
+;;   (setq lsp-modeline-diagnostics-enable nil)
+;;   (setq lsp-diagnostics-provider :none)
+;;   ;; (setq lsp-ui-sideline-enable nil)
+;;   ;; (setq lsp-ui-sideline-show-diagnostics nil)
+;;   ;; (setq lsp-ui-doc-enable nil)
+;;   ;; (setq company-auto-complete t)
+;;   :hook ((python-mode . lsp-deferred))
 ;;   :custom
 ;;   (flycheck-check-syntax-automatically '(mode-enabled save))
 ;;   )

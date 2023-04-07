@@ -1,55 +1,50 @@
 
-(use-package gptai
-  :ensure t)
-(setq gptai-model "gpt-4")
-(setq gptai-username "Christopher Lackner")
-(getenv "OPENAI_API_KEY")
-(if (eq system-type 'windows-nt)
-    (setq gptai-api-key (getenv "OPENAI_API_KEY"))
-  (setq gptai-api-key (shell-command-to-string "/bin/bash -i -c 'echo -n $OPENAI_API_KEY'")))
 
-(defun gpt4-request (gptai-prompt)
-  "Sends a request to OpenAI API's gpt-4 endpoint and return the response.
-Argument GPTAI-PROMPT is the prompt to send to the API."
-  (when (null gptai-api-key)
-    (error "OpenAI API key is not set"))
+(setq python-shell-prompt-regexp "python\\|chatbot3?\\>")
 
-  (let* ((url-request-method "POST")
-         (url-request-extra-headers
-          `(("Content-Type" . "application/json")
-            ("Authorization" . ,(format "Bearer %s" gptai-api-key))))
-         (url-request-data
-          (json-encode `(("model" . "gpt-4")
-                         ("messages" . [((role . "user") (content . ,gptai-prompt))])
-                         ("temperature" . 0.7))))
-         (url "https://api.openai.com/v1/chat/completions")
-         (buffer (url-retrieve-synchronously url nil 'silent))
-         response)
+(defun start-chatbot (arguments)
+  "Starts a chatbot session with the given arguments."
+  ;; (message (concat "Run python as: " (format "chatbot %s" arguments)))
+  (run-python
+    (format "chatbot %s" arguments) t t))
 
-    (message "Sending request to OpenAI API using model 'gpt-4'")
+(defun replace-tics-in-string (string)
+  "Replaces tics in a string with double tics."
+  (replace-regexp-in-string "\"" "\\\\\"" string))
 
-    (if buffer
-      (with-current-buffer buffer
-        (goto-char url-http-end-of-headers)
-        (condition-case gptai-err
-            (progn
-              (setq response (json-read))
-              (if (assoc 'error response)
-                  (error (cdr (assoc 'message (cdr (assoc 'error response)))))
-                (let ((first-choice (elt (cdr (assoc 'choices response)) 0))) ; Extract the first choice
-                  (cdr (assoc 'content (cdr (assoc 'message first-choice))))))) ; Get the 'content' field of the first choice
-          (error (error "Error while parsing OpenAI API response: %s"
-                        (error-message-string gptai-err)))))
-      (error "Failed to send request to OpenAI API"))))
+(defun get-formatted-buffer-region ()
+  "Returns the current buffer region formatted as a string."
+  (let ((start (region-beginning))
+        (end (region-end)))
+    (replace-tics-in-string (buffer-substring-no-properties start end))))
 
-(defun gpt4-query (gptai-prompt)
-  "Sends a request to gpt-4 and insert response at the current point.
-Argument GPTAI-PROMPT prompt to be sent."
-  (interactive (list (read-string "Enter your prompt: ")))
-  (let ((response (gpt4-request gptai-prompt)))
-    (insert response)))
+(defun chatbot-create-docstring ()
+  "Starts a chatbot session with the current buffer as the context to create a docstring from"
+  (interactive)
+  (let ((docstring (get-formatted-buffer-region)))
+    (start-chatbot (concat "--model gpt-3.5-turbo --message \"Create documentation for :\n```\n" docstring "\n```\n\""))))
 
-(global-set-key (kbd "C-c o") 'gtp4-query)
+(defun start-assistant-on-region (message)
+  "Starts a chatbot session with the current region as the context and ask what to do with it"
+  (interactive "sEnter your message: ")
+  (let ((reg (get-formatted-buffer-region)))
+    (start-chatbot (concat "--mode assistant --message \""
+                           (concat (replace-tics-in-string message) "\n" reg) "\""))))
 
+(defun start-coder (message)
+  "Starts a coder bot session and ask what to do with it"
+  (interactive "sEnter your message: ")
+  (start-chatbot (concat "--message \""
+                           (concat (replace-tics-in-string message)) "\"")))
+
+(defun start-coder-on-region (message)
+  "Starts a coder bot session and ask what to do with it with the current region as the context"
+  (interactive "sEnter your message: ")
+  (let ((reg (get-formatted-buffer-region)))
+    (start-chatbot (concat " --message \""
+                           (concat (replace-tics-in-string message) "\n" reg) "\""))))
+
+
+(global-set-key (kbd "C-c C-o d") 'chatbot-create-docstring)
 
 (provide 'gpt-settings)

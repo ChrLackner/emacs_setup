@@ -31,6 +31,19 @@
     (start-chatbot (concat "--mode assistant --message \""
                            (concat (replace-tics-in-string message) "\n" reg) "\""))))
 
+(defun ask-assistant-on-region (message)
+  "Starts a chatbot session with the current region as the context and ask what to do with it"
+  (interactive "sEnter your message: ")
+  (let ((reg (get-formatted-buffer-region)))
+    (start-chatbot (concat "--mode assistant --message \""
+                           (concat (replace-tics-in-string message) "\n" reg) "\""))))
+
+(defun ask-assistant (message)
+  "Starts a chatbot session with the current region as the context and ask what to do with it"
+  (interactive "sEnter your message: ")
+  (start-chatbot (concat "--mode assistant --message \""
+                           (concat (replace-tics-in-string message)) "\"")))
+
 (defun ask-coder (message)
   "Starts a coder bot session and ask what to do with it"
   (interactive "sEnter your message: ")

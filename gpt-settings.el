@@ -6,7 +6,7 @@
   "Starts a chatbot session with the given arguments."
   ;; (message (concat "Run python as: " (format "chatbot %s" arguments)))
   (run-python
-    (format "chatbot %s" arguments) t t))
+    (format "python -m chatbot %s" arguments) t t))
 
 (defun replace-tics-in-string (string)
   "Replaces tics in a string with double tics."

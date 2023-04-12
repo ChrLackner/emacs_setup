@@ -11,7 +11,7 @@
 (require 'use-package)
 ;; (setq use-package-compute-statistics t)
 
-(setq visible-bell 1)
+;; (setq visible-bell 1)
 
 ;; Avoid performance issues in files with very long lines.
 (global-so-long-mode 1)

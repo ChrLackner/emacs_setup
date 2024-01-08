@@ -1,7 +1,7 @@
 
+;; COPILOT
 (use-package quelpa
   :ensure t)
-
 (quelpa
  '(quelpa-use-package
    :fetcher git
@@ -18,14 +18,32 @@
                       :ensure t
                       :files ("dist" "*.el")))
 (add-hook 'prog-mode-hook 'copilot-mode)
+(add-hook 'html-mode-hook 'copilot-mode)
+(add-hook 'markdown-mode-hook 'copilot-mode)
+(add-hook 'org-mode-hook 'copilot-mode)
 (define-key copilot-completion-map (kbd "M-<return>") 'copilot-accept-completion)
 (define-key copilot-completion-map (kbd "M-C-<return>") 'copilot-accept-completion-by-word)
 (define-key copilot-completion-map (kbd "M-<tab>") 'copilot-next-completion)
+;; COPILOT END
+
+;; TABNINE
+(use-package company :ensure t)
+(add-hook 'after-init-hook 'global-company-mode)
+(add-hook 'after-init-hook 'yas-global-mode)
+;; (use-package company-tabnine :ensure t)
+;; (add-to-list 'company-backends #'company-tabnine)
+
+;; ;; Trigger completion immediately.
+;; (setq company-idle-delay 0)
+
+;; ;; Number the candidates (use M-1, M-2 etc to select completions).
+;; (setq company-show-numbers t)
+
+;; TABNINE END
 
 
+;; LSP
 ;; get environment variable PATH
-
-
 (if (eq system-type 'windows-nt)
     (setenv "PATH" (concat (getenv "PATH") (file-name-directory (executable-find "node")) ";"))
   (use-package lsp-pyright
@@ -46,6 +64,7 @@
     (lsp-ui-sideline-enable nil)
     )
   )
+;; LS END
 
 
 ;; ------------------ ccls setup --------------------------

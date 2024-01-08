@@ -213,4 +213,8 @@
       (setq grep-program "\"C:/MinGW/msys/1.0/bin/grep.exe\"")
 ))
 
+(use-package journalctl-mode
+  :ensure t)
+
+
 (provide 'general-settings)

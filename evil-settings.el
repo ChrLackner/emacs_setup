@@ -12,6 +12,7 @@
   :custom
   (evil-disable-insert-state-bindings t)
   (evil-shift-width 2)
+  :bind (("C-j" . evil-normal-state))
   )
 
 

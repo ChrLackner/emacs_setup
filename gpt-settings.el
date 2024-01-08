@@ -10,7 +10,8 @@
 
 (defun replace-tics-in-string (string)
   "Replaces tics in a string with double tics."
-  (replace-regexp-in-string "\"" "\\\\\"" string))
+  (replace-regexp-in-string "\"" "\\\\\"" string)
+  )
 
 (defun get-formatted-buffer-region ()
   "Returns the current buffer region formatted as a string."
@@ -24,12 +25,15 @@
   (let ((docstring (get-formatted-buffer-region)))
     (start-chatbot (concat "--model gpt-3.5-turbo --message \"Create documentation for :\n```\n" docstring "\n```\n\""))))
 
-(defun start-assistant-on-region (message)
+(defun start-assistant ()
   "Starts a chatbot session with the current region as the context and ask what to do with it"
-  (interactive "sEnter your message: ")
-  (let ((reg (get-formatted-buffer-region)))
-    (start-chatbot (concat "--mode assistant --message \""
-                           (concat (replace-tics-in-string message) "\n" reg) "\""))))
+  (interactive)
+  (start-chatbot (concat "--mode assistant")))
+
+(defun start-grant-writer ()
+  "Starts a chatbot session with the current region as the context and ask what to do with it"
+  (interactive)
+  (start-chatbot (concat "--mode grant_writer")))
 
 (defun ask-assistant-on-region (message)
   "Starts a chatbot session with the current region as the context and ask what to do with it"
@@ -100,5 +104,6 @@
     (start-chatbot (concat "--mode assistant --memory --train --memory_file simpl --message \""
                            (concat (replace-tics-in-string message) "\n" reg) "\""))))
 
+(setenv "GPT_KNOWLEDGE_BASE" "/home/christopher/git/source/gpt-knowledge-base")
 
 (provide 'gpt-settings)

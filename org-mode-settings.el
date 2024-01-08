@@ -28,7 +28,7 @@
    'org-babel-load-languages
    '((python . t)))
   (advice-add 'org-create-formula-image :around #'org-renumber-environment)
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.2))
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2))
   :custom
   (org-startup-with-inline-images t)
   (org-support-shift-select t)
@@ -184,21 +184,5 @@ same directory as the org-buffer and insert a link to this file."
 
 (use-package table
   :ensure t)
-
-;; (setq suv-org-personal-todo-file (concat org-directory "/todo.org"))
-
-;; ;; template spec: (<key> <short description> <type> <target> <template> <properties>)
-
-;; (setq org-capture-templates '(("t"
-;;                                "Personal todo"
-;;                                entry
-;;                                (file suv-org-personal-todo-file)
-;;                                "* TODO %^{Description}\n :LOGBOOK:\n  - Added: %U\n  :END:\n  %?")))
-
-
-(use-package zotxt
-  :ensure t)
-
-(setq org-zotxt-link-description-style :betterbibtexkey)
 
 (provide 'org-mode-settings)

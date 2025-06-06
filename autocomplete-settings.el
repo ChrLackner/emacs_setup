@@ -69,6 +69,8 @@
     )
 ;; LS END
 
+(require 'lsp-mode)
+(require 'lsp-headerline)
 (lsp-defun my-lsp-headerline--symbol-icon ((&DocumentSymbol :kind))
   "Build the SYMBOL icon for headerline breadcrumb."
   (concat (lsp-icons-get-by-symbol-kind kind 'headerline-breadcrumb)
@@ -99,19 +101,18 @@
                           (concat
                            (propertize (number-to-string index)
                                        'face
-                                       'lsp-headerline-breadcrumb-symbols-face))
+                                       'lsp-headerline-breadcrumb-symbols-face)
+                           " ")
                         "")
                       (if symbol2-icon
                           (concat symbol2-icon symbol2-name)
                         symbol2-name))))
                (lsp-headerline--symbol-with-action symbol full-symbol-2)))
            enumerated-symbols-hierarchy
-           (propertize (concat " " (my-lsp-headerline--arrow-icon) " ")
+           (propertize (concat " " (lsp-headerline--arrow-icon) " ")
                        'face 'lsp-headerline-breadcrumb-separator-face))
         "")
     ""))
-
-
 
 
 ;; ------------------ ccls setup --------------------------

@@ -46,6 +46,12 @@
     (setq gc-cons-threshold 1000000)
     (setq read-process-output-max (* 1024 1024)) ;; 1mb
     (setq flycheck-display-errors-function 'ignore)
+    (set-face-attribute 'lsp-headerline-breadcrumb-symbols-face nil :background nano-color-subtle)
+    (set-face-attribute 'lsp-headerline-breadcrumb-separator-face nil :background nano-color-subtle)
+    (set-face-attribute 'lsp-headerline-breadcrumb-path-face nil :background nano-color-subtle)
+    (set-face-attribute 'lsp-headerline-breadcrumb-project-prefix-face nil :background nano-color-subtle)
+    lsp-headerline-breadcrumb-unknown-project-prefix-face
+    (set-face-attribute 'lsp-headerline-breadcrumb-unknown-project-prefix-face nil :background nano-color-subtle)
     :custom
     (lsp-headerline-breadcrumb-enable nil)
     (lsp-lens-enable nil)
@@ -62,6 +68,51 @@
     (lsp-pyright-python-executable-cmd "/usr/bin/python")
     )
 ;; LS END
+
+(lsp-defun my-lsp-headerline--symbol-icon ((&DocumentSymbol :kind))
+  "Build the SYMBOL icon for headerline breadcrumb."
+  (concat (lsp-icons-get-by-symbol-kind kind 'headerline-breadcrumb)
+          ""))
+
+
+(defun my-lsp-headerline--build-symbol-string ()
+  "Build the symbol segment for the breadcrumb."
+  (if (lsp-feature? "textDocument/documentSymbol")
+      (-if-let* ((lsp--document-symbols-request-async t)
+                 (symbols (lsp--get-document-symbols))
+                 (symbols-hierarchy (lsp--symbols->document-symbols-hierarchy symbols))
+                 (enumerated-symbols-hierarchy
+                  (-map-indexed (lambda (index elt)
+                                  (cons elt (1+ index)))
+                                symbols-hierarchy)))
+          (mapconcat
+           (-lambda (((symbol &as &DocumentSymbol :name)
+                      . index))
+             (let* ((symbol2-name
+                     (propertize name
+                                 'font-lock-face
+                                 (lsp-headerline--face-for-symbol symbol)))
+                    (symbol2-icon (my-lsp-headerline--symbol-icon symbol))
+                    (full-symbol-2
+                     (concat
+                      (if lsp-headerline-breadcrumb-enable-symbol-numbers
+                          (concat
+                           (propertize (number-to-string index)
+                                       'face
+                                       'lsp-headerline-breadcrumb-symbols-face))
+                        "")
+                      (if symbol2-icon
+                          (concat symbol2-icon symbol2-name)
+                        symbol2-name))))
+               (lsp-headerline--symbol-with-action symbol full-symbol-2)))
+           enumerated-symbols-hierarchy
+           (propertize (concat " " (my-lsp-headerline--arrow-icon) " ")
+                       'face 'lsp-headerline-breadcrumb-separator-face))
+        "")
+    ""))
+
+
+
 
 ;; ------------------ ccls setup --------------------------
 

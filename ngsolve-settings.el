@@ -35,7 +35,7 @@
     (if (eq (point) (point-max))
         nil
       (kill-line))
-    (insert (concat "cd " directory " && netgen " filename))
+    (insert (concat "cd " directory " && nice netgen " filename))
     (shx-send-input)
     )
   )

@@ -90,13 +90,11 @@
 
 
 (use-package org-ref
-  :defer t
+  :ensure t
   :custom
-  (reftex-default-bibliography '("~/git/source/reports/bibliography/references.bib"))
-  ;; see org-ref for use of these variables
-  (org-ref-bibliography-notes "~/git/source/reports/bibliography/notes.org")
-  (org-ref-default-bibliography '("~/git/source/reports/bibliography/references.bib"))
-  (org-ref-pdf-directory "~/git/source/reports/bibliography/bibtex-pdfs/")
+  (org-cite-global-bibliography '("~/stuff/MyLibrary.bib"))
+  (bibtex-completion-library-path '("~/cloud/cerbsim_nextcloud/zotero"))
+  (bibtex-completion-bibliography '("~/stuff/MyLibrary.bib"))
   )
 
 

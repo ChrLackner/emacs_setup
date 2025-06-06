@@ -89,7 +89,7 @@
   (interactive
    (list (completing-read "Source: " (directory-files "~/git/source"))))
   (if (string= prog "netgen") (compile (format "make -j6 -C ~/git/build/ngsolve/netgen install"))
-    (if (and (file-exists-p (format "~/git/source/%s/setup.py" prog)) (not (string= prog "ngsolve")))
+    (if (and (file-exists-p (format "~/git/source/%s/setup.py" prog)) (not (string= prog "ngsolve")) (not (string= prog "xfem")))
         (async-shell-command (format "python -m pip install --no-deps --user ~/git/source/%s" prog))
       (compile (format "make -j6 -C ~/git/build/%s install" prog)))))
 
@@ -216,5 +216,7 @@
 (use-package journalctl-mode
   :ensure t)
 
+(use-package rustic
+  :ensure t)
 
 (provide 'general-settings)

@@ -31,4 +31,7 @@
 
 (require 'gpt-settings)
 
+
+(require 'wgsl-mode)
+
 (provide 'my-settings)

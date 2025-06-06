@@ -24,7 +24,7 @@
 (use-package key-chord
   :ensure t
   :config
-  (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+  ;; (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
   (key-chord-mode 1))
 
 (provide 'evil-settings)

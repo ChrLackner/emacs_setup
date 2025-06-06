@@ -22,39 +22,30 @@
 (add-hook 'markdown-mode-hook 'copilot-mode)
 (add-hook 'org-mode-hook 'copilot-mode)
 (define-key copilot-completion-map (kbd "M-<return>") 'copilot-accept-completion)
-(define-key copilot-completion-map (kbd "M-C-<return>") 'copilot-accept-completion-by-word)
+(define-key copilot-completion-map (kbd "C-M-<return>") 'copilot-accept-completion-by-word)
 (define-key copilot-completion-map (kbd "M-<tab>") 'copilot-next-completion)
 ;; COPILOT END
 
-;; TABNINE
+(add-hook 'gud-mode-hook (lambda () (company-mode -1)))
 (use-package company :ensure t)
 (add-hook 'after-init-hook 'global-company-mode)
-(add-hook 'after-init-hook 'yas-global-mode)
-;; (use-package company-tabnine :ensure t)
-;; (add-to-list 'company-backends #'company-tabnine)
-
-;; ;; Trigger completion immediately.
-;; (setq company-idle-delay 0)
-
-;; ;; Number the candidates (use M-1, M-2 etc to select completions).
-;; (setq company-show-numbers t)
-
-;; TABNINE END
-
 
 ;; LSP
 ;; get environment variable PATH
 (if (eq system-type 'windows-nt)
-    (setenv "PATH" (concat (getenv "PATH") (file-name-directory (executable-find "node")) ";"))
-  (use-package lsp-pyright
+    (setenv "PATH" (concat (getenv "PATH") (file-name-directory (executable-find "node")) ";")))
+
+(use-package lsp-pyright
     :ensure t
     :bind (:map evil-normal-state-map (("M-." . 'xref-find-definitions)))
     :hook ((python-mode . lsp-deferred)
            (c-mode . lsp-deferred)
-           (c++-mode . lsp-deferred))
+           (c++-mode . lsp-deferred)
+           (lsp-mode . (lambda() (require 'lsp-headerline))))
     :config
     (setq gc-cons-threshold 1000000)
     (setq read-process-output-max (* 1024 1024)) ;; 1mb
+    (setq flycheck-display-errors-function 'ignore)
     :custom
     (lsp-headerline-breadcrumb-enable nil)
     (lsp-lens-enable nil)
@@ -62,10 +53,15 @@
     (lsp-ui-doc-enable nil)
     (lsp-modeline-code-actions nil)
     (lsp-ui-sideline-enable nil)
+    (lsp-enable-on-type-formatting nil)
+    (lsp-clients-clangd-args '("-j=4"
+                                "--background-index"
+                                "--limit-references=0"
+                                "--clang-tidy"
+                                "-log=error"))
+    (lsp-pyright-python-executable-cmd "/usr/bin/python")
     )
-  )
 ;; LS END
-
 
 ;; ------------------ ccls setup --------------------------
 
@@ -77,8 +73,8 @@
 ;; (let ((default-directory  "~/.emacs.d/settings/resources"))
 ;;   (normal-top-level-add-subdirs-to-load-path))
 
-;; (require 'yasnippet)
-;; (yas-global-mode 1)
+(require 'yasnippet)
+(yas-global-mode 1)
 
 ;; (require 'lsp-bridge)
 ;; (global-lsp-bridge-mode)

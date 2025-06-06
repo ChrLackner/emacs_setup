@@ -18,7 +18,9 @@
 ;; -----------------
 (require 'nano-theme-dark)
 (nano-theme-set-dark)
-;; (require 'nano-layout)
+;; (require 'nano-theme-light)
+;; (nano-theme-set-light)
+;; (Require 'nano-layout)
 (require 'nano-faces)
 (nano-faces)
 

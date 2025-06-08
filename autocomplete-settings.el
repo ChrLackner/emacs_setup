@@ -14,6 +14,11 @@
         ("M-<return>" . copilot-accept-completion)
         ("C-M-<return>" . copilot-accept-completion-by-word)
         ("M-<tab>" . copilot-next-completion)))
+
+
+(add-to-list 'display-buffer-alist
+             '("\\*Warnings\\*"
+               (display-buffer-no-window)))
 ;; COPILOT END
 
 (use-package editorconfig

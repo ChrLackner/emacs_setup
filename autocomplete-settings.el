@@ -1,30 +1,23 @@
 
 ;; COPILOT
-(use-package quelpa
-  :ensure t)
-(quelpa
- '(quelpa-use-package
-   :fetcher git
-   :url "https://github.com/quelpa/quelpa-use-package.git"))
-(require 'quelpa-use-package)
+(use-package copilot
+  :ensure t
+  :vc (:url "https://github.com/copilot-emacs/copilot.el"
+            :rev :newest
+            :branch "main")
+  :hook ((prog-mode . copilot-mode)
+         (html-mode . copilot-mode)
+         (markdown-mode . copilot-mode)
+         (org-mode . copilot-mode))
+  :bind
+  (:map copilot-completion-map
+        ("M-<return>" . copilot-accept-completion)
+        ("C-M-<return>" . copilot-accept-completion-by-word)
+        ("M-<tab>" . copilot-next-completion)))
+;; COPILOT END
 
 (use-package editorconfig
   :ensure t)
-
-(use-package copilot
-  :quelpa (copilot.el :fetcher github
-                      :repo "zerolfx/copilot.el"
-                      :branch "main"
-                      :ensure t
-                      :files ("dist" "*.el")))
-(add-hook 'prog-mode-hook 'copilot-mode)
-(add-hook 'html-mode-hook 'copilot-mode)
-(add-hook 'markdown-mode-hook 'copilot-mode)
-(add-hook 'org-mode-hook 'copilot-mode)
-(define-key copilot-completion-map (kbd "M-<return>") 'copilot-accept-completion)
-(define-key copilot-completion-map (kbd "C-M-<return>") 'copilot-accept-completion-by-word)
-(define-key copilot-completion-map (kbd "M-<tab>") 'copilot-next-completion)
-;; COPILOT END
 
 (add-hook 'gud-mode-hook (lambda () (company-mode -1)))
 (use-package company :ensure t)
@@ -50,7 +43,6 @@
     (set-face-attribute 'lsp-headerline-breadcrumb-separator-face nil :background nano-color-subtle)
     (set-face-attribute 'lsp-headerline-breadcrumb-path-face nil :background nano-color-subtle)
     (set-face-attribute 'lsp-headerline-breadcrumb-project-prefix-face nil :background nano-color-subtle)
-    lsp-headerline-breadcrumb-unknown-project-prefix-face
     (set-face-attribute 'lsp-headerline-breadcrumb-unknown-project-prefix-face nil :background nano-color-subtle)
     :custom
     (lsp-headerline-breadcrumb-enable nil)

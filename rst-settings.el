@@ -13,7 +13,8 @@
 
   )
 
-(use-package texfrag)
+(use-package texfrag
+  :ensure t)
 (add-hook 'markdown-mode-hook #'texfrag-mode)
 (setq texfrag-scale 1)
 

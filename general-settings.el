@@ -33,7 +33,6 @@
         (dolist (var (list "PATH" "PYTHONPATH" "MKLROOT" "MKL_THREADING_LAYER" "PYOPENGL_PLATFORM"))
           (setenv var (shell-command-to-string (concat "cmd /c echo %" var "%")))
           ))
-      (setq python-shell-interpreter "C:/Users/chris/source/repos/cenos/backend/bin/python.exe")
       )
   ;; else
   (progn
@@ -85,18 +84,65 @@
 ;; I use this to switch between us-de keyboard layouts
 (global-unset-key (kbd "M-SPC"))
 
-(defun build (prog)
-  (interactive
-   (list (completing-read "Source: " (directory-files "~/git/source"))))
-  (if (string= prog "netgen") (compile (format "make -j6 -C ~/git/build/ngsolve/netgen install"))
-    (if (and (file-exists-p (format "~/git/source/%s/setup.py" prog)) (not (string= prog "ngsolve")) (not (string= prog "xfem")))
-        (async-shell-command (format "python -m pip install --no-deps --user ~/git/source/%s" prog))
-      (compile (format "make -j6 -C ~/git/build/%s install" prog)))))
+(require 'cl-lib)
 
-(defun reconfigure (prog)
-  (interactive
-   (list (completing-read "Source: " (directory-files "~/git/build"))))
-  (async-shell-command (format "reconfigure %s" prog)))
+(defun cerb--cmake-candidates (&optional root)
+  "Return completion candidates for cmake build dirs under ROOT.
+Each candidate is (DISPLAY . (DIR . INNERNAME))."
+  (let* ((root (expand-file-name (or root "~/git/build")))
+         (cmake-files
+          (directory-files-recursively
+           root
+           (rx bos ".cmake_" (+ (not (any "/"))) ".sh" eos)))
+         (pairs
+          (cl-remove-duplicates
+           (cl-loop for f in cmake-files
+                    for dir = (file-name-directory f)
+                    for inner = (file-name-nondirectory (directory-file-name dir))
+                    for expected = (concat ".cmake_" inner ".sh")
+                    when (string-equal (file-name-nondirectory f) expected)
+                    collect (cons (directory-file-name dir) inner))
+           :test (lambda (a b) (and (string= (car a) (car b))
+                                    (string= (cdr a) (cdr b)))))))
+    ;; DISPLAY = path relative to root
+    (mapcar (lambda (p)
+              (let* ((dir (car p))
+                     (inner (cdr p))
+                     (disp (file-relative-name dir root)))
+                (cons disp (cons dir inner))))
+            (sort pairs (lambda (a b) (string-lessp (car a) (car b)))))))
+
+(defun cerb--read-cmake-target ()
+  "Prompt user for a cmake target and return (DIR . INNERNAME)."
+  (let* ((cands (cerb--cmake-candidates "~/git/build"))
+         (choice (completing-read "Target: " (mapcar #'car cands) nil t)))
+    (cdr (assoc choice cands))))
+
+(defun build ()
+  (interactive)
+  (pcase-let* ((`(,dir . ,inner) (cerb--read-cmake-target)))
+    (compile (format "make -j6 -C %s install"
+                     (shell-quote-argument dir)))))
+
+(defun reconfigure ()
+  (interactive)
+  (pcase-let* ((`(,dir . ,inner) (cerb--read-cmake-target))
+               (file (format ".cmake_%s.sh" inner)))
+    (async-shell-command
+     (format "bash -lc 'cd %s && source %s && echo \"sourced %s\"'"
+             (shell-quote-argument dir)
+             (shell-quote-argument file)
+             (shell-quote-argument file)))))
+
+(defun build-configured ()
+  "Source the .cmake_<inner>.sh and then run make in the same shell."
+  (interactive)
+  (pcase-let* ((`(,dir . ,inner) (cerb--read-cmake-target))
+               (file (format ".cmake_%s.sh" inner)))
+    (compile
+     (format "bash -lc 'cd %s && source %s && make -j6 install'"
+             (shell-quote-argument dir)
+             (shell-quote-argument file)))))
 
 ;; Toggle window dedication
 (defun toggle-window-dedicated ()
@@ -119,6 +165,7 @@
 (put 'narrow-to-region 'disabled nil)
 
 (use-package move-text
+  :ensure t
   :bind (("M-p" . move-text-up)
          ("M-n" . move-text-down)))
 

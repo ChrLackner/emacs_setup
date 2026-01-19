@@ -13,7 +13,11 @@
   (:map copilot-completion-map
         ("M-<return>" . copilot-accept-completion)
         ("C-M-<return>" . copilot-accept-completion-by-word)
-        ("M-<tab>" . copilot-next-completion)))
+        ("M-<tab>" . copilot-next-completion))
+  :config
+   (setq copilot-max-char most-positive-fixnum)
+  )
+
 
 
 (add-to-list 'display-buffer-alist
@@ -66,13 +70,14 @@
     )
 ;; LS END
 
-(require 'lsp-mode)
+(use-package lsp-mode
+  :ensure t
+  :config
+  (lsp-defun my-lsp-headerline--symbol-icon ((&DocumentSymbol :kind))
+    "Build the SYMBOL icon for headerline breadcrumb."
+    (concat (lsp-icons-get-by-symbol-kind kind 'headerline-breadcrumb)
+            "")))
 (require 'lsp-headerline)
-(lsp-defun my-lsp-headerline--symbol-icon ((&DocumentSymbol :kind))
-  "Build the SYMBOL icon for headerline breadcrumb."
-  (concat (lsp-icons-get-by-symbol-kind kind 'headerline-breadcrumb)
-          ""))
-
 
 (defun my-lsp-headerline--build-symbol-string ()
   "Build the symbol segment for the breadcrumb."
@@ -110,6 +115,18 @@
                        'face 'lsp-headerline-breadcrumb-separator-face))
         "")
     ""))
+(with-eval-after-load 'flymake
+  (defun my/disable-flymake-cc ()
+    "Disable Flymake's builtin C/C++ backend (gcc-flymake) when using LSP/clangd."
+    (remove-hook 'flymake-diagnostic-functions 'flymake-cc t))
+
+  (add-hook 'c-mode-hook  #'my/disable-flymake-cc)
+  (add-hook 'c++-mode-hook #'my/disable-flymake-cc))
+(add-hook 'python-mode-hook
+          (lambda ()
+            ;; Keep LSP/Flymake diagnostics, but drop python-flymake.
+            (remove-hook 'flymake-diagnostic-functions #'python-flymake t)))
+
 
 
 ;; ------------------ ccls setup --------------------------
@@ -122,7 +139,8 @@
 ;; (let ((default-directory  "~/.emacs.d/settings/resources"))
 ;;   (normal-top-level-add-subdirs-to-load-path))
 
-(require 'yasnippet)
+(use-package yasnippet
+  :ensure t)
 (yas-global-mode 1)
 
 ;; (require 'lsp-bridge)

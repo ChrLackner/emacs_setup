@@ -1,5 +1,6 @@
 
-(use-package cmake-mode)
+(use-package cmake-mode
+  :ensure t)
 (use-package cc-mode
   :init
   (fset 'add_block_brackets
@@ -35,6 +36,7 @@
       (insert "\n} // namespace " name))))
 
 (use-package cff
+  :ensure t
   :bind (:map c-mode-base-map
               ("M-o" . 'cff-find-other-file)))
 

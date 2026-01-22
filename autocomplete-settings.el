@@ -127,6 +127,16 @@
             ;; Keep LSP/Flymake diagnostics, but drop python-flymake.
             (remove-hook 'flymake-diagnostic-functions #'python-flymake t)))
 
+;; Prune non-existent workspace folders to avoid lsp-mode polling them repeatedly.
+(with-eval-after-load 'lsp-mode
+  (defun clackner/lsp--prune-missing-workspace-folder (orig-fn dir &rest args)
+    (if (file-directory-p dir)
+        (apply orig-fn dir args)
+      ;; Forget it so it doesn't keep coming back:
+      (ignore-errors (lsp-workspace-folders-remove dir))
+      (lsp--info "Removed non-existent workspace folder: %s" dir)
+      nil))
+  (advice-add 'lsp-watch-root-folder :around #'clackner/lsp--prune-missing-workspace-folder))
 
 
 ;; ------------------ ccls setup --------------------------

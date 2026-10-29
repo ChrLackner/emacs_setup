@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 
 (use-package evil
   :ensure t
@@ -20,11 +21,5 @@
   :ensure t
   :config
   (evil-commentary-mode 1))
-
-(use-package key-chord
-  :ensure t
-  :config
-  ;; (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
-  (key-chord-mode 1))
 
 (provide 'evil-settings)

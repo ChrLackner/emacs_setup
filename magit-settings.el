@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 
 (if (eq system-type 'windows-nt)
     (progn
@@ -8,6 +9,7 @@
   :ensure t
   :bind (("C-x g" . 'magit-status)
          ("C-c b" . 'magit-blame))
+  :hook (magit-mode . (lambda () (setq-local long-line-threshold 1000000)))
   :config
   (set-face-background 'magit-diff-whitespace-warning "sandy brown"))
 

@@ -1,7 +1,8 @@
+;; -*- lexical-binding: t; -*-
 
 
-(defun run-ngsolve ()
-  (interactive)
+(defun my-run-in-shell (cmd)
+  "Run CMD on the current file in the *shx* buffer of the other window."
   (let* ((filename (file-name-nondirectory buffer-file-name))
          (directory  (file-name-directory buffer-file-name)))
     (other-window 1)
@@ -10,73 +11,15 @@
       (shx))
     (goto-char (point-max))
     (move-beginning-of-line nil)
-    (if (eq (point) (point-max))
-        nil
+    (unless (eq (point) (point-max))
       (kill-line))
-    (insert (concat "cd " directory " && nice ngsolve " filename))
-    (shx-send-input)
-    )
-  )
+    (insert (concat "cd " directory " && " cmd " " filename))
+    (shx-send-input)))
 
-(defun run-netgen ()
-  (interactive)
-  (let* ((filename (file-name-nondirectory buffer-file-name))
-         (directory  (file-name-directory buffer-file-name)))
-    (other-window 1)
-    (if (eq system-type 'windows-nt)
-        (if (get-buffer "*PowerShell*")
-            (switch-to-buffer "*PowerShell*")
-          (powershell))
-      (if (get-buffer "*shx*")
-          (switch-to-buffer "*shx*")
-        (shx)))
-    (goto-char (point-max))
-    (move-beginning-of-line nil)
-    (if (eq (point) (point-max))
-        nil
-      (kill-line))
-    (insert (concat "cd " directory " && nice netgen " filename))
-    (shx-send-input)
-    )
-  )
-
-(defun my-run-mpi()
-  (interactive)
-  (let* ((filename (file-name-nondirectory buffer-file-name))
-         (directory  (file-name-directory buffer-file-name)))
-    (other-window 1)
-    (if (get-buffer "*shx*")
-        (switch-to-buffer "*shx*")
-      (shx))
-    (goto-char (point-max))
-    (move-beginning-of-line nil)
-    (if (eq (point) (point-max))
-        nil
-      (kill-line))
-    (insert (concat "cd " directory " && mpirun -np 6 python " filename))
-    (shx-send-input)
-    )
-  )
-
-(defun my-run-python ()
-  (interactive)
-  (let* ((filename (file-name-nondirectory buffer-file-name))
-         (directory  (file-name-directory buffer-file-name)))
-    (other-window 1)
-    (if (get-buffer "*shx*")
-        (switch-to-buffer "*shx*")
-      (shx))
-    (goto-char (point-max))
-    (move-beginning-of-line nil)
-    (if (eq (point) (point-max))
-        nil
-      (kill-line))
-    (insert (concat "cd " directory " && python " filename))
-    (shx-send-input)
-    )
-  )
-
-
+(defun run-ngsolve () (interactive) (my-run-in-shell "nice ngsolve"))
+(defun run-netgen () (interactive) (my-run-in-shell "nice netgen"))
+(defun my-run-mpi () (interactive) (my-run-in-shell "mpirun -np 6 python"))
+(defun my-run-python () (interactive) (my-run-in-shell "python"))
 
 (use-package python
   :bind (:map python-mode-map
@@ -89,14 +32,12 @@
     "Netgen geo file mode"
     (setq comment-start "#")
     (setq comment-end "")
-
-    (let ((map (make-sparse-keymap)))
-      (define-key map [C-c m] 'run-netgen)
-      map)
     (font-lock-add-keywords nil '(("\\<\\(solid\\|tlo\\|boundaryconditionname\\|algebraic3d\\)\\>" . 'font-lock-builtin-face)))
     (font-lock-add-keywords nil '(("\\<\\( orthobrick\\| plane\\| cylinder\\| polyhedron\\| torus\\)\\>" . 'font-lock-function-name-face)))
     )
 
+
+(define-key netgen-geo-mode-map (kbd "C-c m") 'run-netgen)
 
 (add-to-list 'auto-mode-alist '("\\.geo\\'" . netgen-geo-mode))
 

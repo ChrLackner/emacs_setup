@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 
 ;; remove autointend from rst mode
 (defun my-rst-mode-hook ()

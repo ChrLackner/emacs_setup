@@ -1,6 +1,8 @@
+;; -*- lexical-binding: t; -*-
 
 (use-package cmake-mode
-  :ensure t)
+  :ensure t
+  :defer t)
 (use-package cc-mode
   :init
   (fset 'add_block_brackets
@@ -62,6 +64,7 @@
               ("c" . 'recompile)))
 
 (use-package glsl-mode
-  :mode (rx (or ".vert" ".frag" ".geom" ".tesc" ".tese" ".inc")))
+  :ensure t
+  :mode (rx "." (or "vert" "frag" "geom" "tesc" "tese" "inc") eos))
 
 (provide 'cpp-settings)

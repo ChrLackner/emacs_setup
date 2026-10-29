@@ -1,4 +1,4 @@
-;; ;; sanityinc tomorrow theme
+;; ;; sanityinc tomorrow theme  -*- lexical-binding: t; -*-
 ;; (use-package color-theme-sanityinc-tomorrow
 ;;   :config
 ;;   (load-theme 'sanityinc-tomorrow-night t)
@@ -49,13 +49,6 @@
 
 ; don't show the startup screen
 (setq inhibit-startup-screen t)
-; don't show the tool bar
-(require 'tool-bar)
-(tool-bar-mode 0)
-; don't show the menu bar
-(menu-bar-mode 0)
-; disable scroll bar
-(toggle-scroll-bar 0)
 ; don't blink the cursor
 (blink-cursor-mode 0)
 

@@ -1,11 +1,8 @@
+;; -*- lexical-binding: t; -*-
 
 (require 'package)
 
-;; https://emacs.stackexchange.com/questions/61997/how-do-i-fix-incomprehensible-buffer-error-when-running-list-packages
-(setq package-enable-at-star (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")tup nil)
-
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
 
 (require 'use-package)
@@ -16,6 +13,8 @@
 ;; Avoid performance issues in files with very long lines.
 (global-so-long-mode 1)
 
+
+
 ;; break on word endings
 (global-visual-line-mode t)
 (define-key visual-line-mode-map [remap kill-line] nil)
@@ -23,7 +22,8 @@
 (define-key visual-line-mode-map [remap move-end-of-line] nil)
 
 (use-package svg-tag-mode
-  :ensure t)
+  :ensure t
+  :defer t)
 
 ; set PATH, because we don't load .bashrc
                                         ; function from https://gist.github.com/jakemcc/3887459
@@ -39,8 +39,8 @@
     (defun set-exec-env-vars()
       (dolist (var (list "PATH" "PYTHONPATH" "LD_LIBRARY_PATH" "MKLROOT" "MKL_THREADING_LAYER" "PYOPENGL_PLATFORM"))
         (setenv var (shell-command-to-string (concat "/bin/bash -i -c 'echo -n $" var "' 2> /dev/null")))
-        ))
-    (shell-command-to-string (concat "/bin/bash -i -c 'echo -n $" "PYTHONPATH" "' 2> /dev/null"))
+        )
+      (setq exec-path (append (parse-colon-path (getenv "PATH")) (list exec-directory))))
     )
   )
 
@@ -57,7 +57,7 @@
 
 
 ; auto revert buffers
-(auto-revert-mode)
+(global-auto-revert-mode 1)
 
 ; don't show windows eol as ^M
 (setq inhibit-windows-eol t)
@@ -144,18 +144,6 @@ Each candidate is (DISPLAY . (DIR . INNERNAME))."
              (shell-quote-argument dir)
              (shell-quote-argument file)))))
 
-;; Toggle window dedication
-(defun toggle-window-dedicated ()
-  "Toggle whether the current active window is dedicated or not"
-  (interactive)
-  (message
-   (if (let (window (get-buffer-window (current-buffer)))
-         (set-window-dedicated-p window
-                                 (not (window-dedicated-p window))))
-       "Window '%s' is dedicated"
-     "Window '%s' is normal")
-   (current-buffer)))
-
 ;; Press [pause] key in each window you want to "freeze"
 (global-set-key [pause] 'toggle-window-dedicated)
 
@@ -182,16 +170,25 @@ Each candidate is (DISPLAY . (DIR . INNERNAME))."
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
 
-(add-hook 'find-file-hooks 'remove-dos-eol)
+(add-hook 'find-file-hook 'remove-dos-eol)
 
 
-(use-package smex
+(use-package vertico
   :ensure t
-  :config (smex-initialize)
-  :bind (("M-x" . 'smex)
-         ("M-X" . 'smex-major-mode-commands)
-         ;; This is your old M-x.
-         ("C-c C-c M-x" . 'execute-extended-command)))
+  :init (vertico-mode 1))
+
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+(use-package marginalia
+  :ensure t
+  :init (marginalia-mode 1))
+
+(use-package savehist
+  :init (savehist-mode 1))
 
 ;; better shell
 (if (eq system-type 'windows-nt)
@@ -261,9 +258,11 @@ Each candidate is (DISPLAY . (DIR . INNERNAME))."
 ))
 
 (use-package journalctl-mode
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (use-package rustic
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (provide 'general-settings)

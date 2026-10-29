@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 
 ;; ===================================================================
 ;; Add color to the current GUD line (obrigado google)
@@ -52,10 +53,9 @@
       ;; (gdb-set-window-buffer (gdb-locals-buffer-name) nil win3)
       (gdb-set-window-buffer (gdb-stack-buffer-name) nil win2)
       (select-window win1)
-      (if gud-last-last-frame
-          (set-window-buffer
-           win1
-           (gud-find-file (car gud-last-last-frame))))
+      (let ((f (car-safe gud-last-last-frame)))
+        (when (stringp f)
+          (set-window-buffer win1 (gud-find-file f))))
       (setq gdb-source-window (selected-window))
       (let ((win3 (split-window-right)))
         (gdb-set-window-buffer
